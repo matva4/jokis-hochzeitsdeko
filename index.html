@@ -25,8 +25,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:var(--font-body);font-weight:300;color:var(--ink);background:var(--ivory);line-height:1.7;overflow-x:hidden}
-body.locked{overflow:hidden}
+body{font-family:var(--font-body);font-weight:300;color:var(--ink);background:var(--ivory);line-height:1.7;overflow-x:clip}
 img{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
 button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
@@ -35,7 +34,7 @@ h1,h2,h3,h4{font-family:var(--font-display);font-weight:600;color:var(--wine-dee
 section{position:relative}
 .eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:14px}
 .eyebrow::before{content:"";width:28px;height:1px;background:var(--gold)}
-.section-head{max-width:640px;margin:0 auto 56px;text-align:center}
+.section-head{max-width:660px;margin:0 auto 56px;text-align:center}
 .section-head .eyebrow::after{content:"";width:28px;height:1px;background:var(--gold)}
 .section-head h2{font-size:clamp(2rem,4vw,2.9rem);margin-bottom:14px}
 .section-head p{color:var(--ink-soft)}
@@ -48,29 +47,55 @@ section{position:relative}
 .btn-ghost:hover{background:rgba(248,243,234,.1);border-color:var(--gold-soft)}
 .btn-wine{background:var(--wine-deep);color:var(--ivory)}
 .btn-wine:hover{background:var(--wine);transform:translateY(-2px)}
-.btn-outline{border:1px solid var(--wine-deep);color:var(--wine-deep)}
-.btn-outline:hover{background:var(--wine-deep);color:var(--ivory)}
 
-/* Reveal on scroll */
 .reveal{opacity:0;transform:translateY(34px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
 .reveal.in{opacity:1;transform:none}
 .reveal.d1{transition-delay:.1s}.reveal.d2{transition-delay:.2s}.reveal.d3{transition-delay:.3s}
 
 /* ==========================================================
-   INTRO
+   INTRO – fester Startbereich
    ========================================================== */
-#intro{position:fixed;inset:0;z-index:1000;background:#151515;transition:opacity 1.1s var(--ease),visibility 1.1s}
-#intro.done{opacity:0;visibility:hidden}
-#introCanvas{width:100%;height:100%;display:block}
-.intro-skip{position:absolute;top:22px;right:24px;color:rgba(248,243,234,.7);font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;padding:10px 18px;border:1px solid rgba(248,243,234,.25);border-radius:999px;transition:.3s;z-index:3}
-.intro-skip:hover{color:var(--gold-soft);border-color:var(--gold-soft)}
-.intro-caption{position:absolute;left:50%;bottom:9vh;transform:translateX(-50%);text-align:center;color:rgba(248,243,234,.55);font-size:.78rem;letter-spacing:.3em;text-transform:uppercase;transition:opacity .6s;z-index:2;white-space:nowrap}
-.intro-title{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none;opacity:0;transition:opacity 1.4s var(--ease);z-index:2}
-.intro-title.show{opacity:1;pointer-events:auto}
-.intro-title small{font-size:.8rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold-soft);margin-bottom:18px}
+#intro{height:620vh;background:#141414;color:var(--ivory)}
+.intro-sticky{position:sticky;top:0;height:100vh;height:100svh;min-height:520px;overflow:hidden}
+.chapters{position:absolute;left:28px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:6px;pointer-events:auto;z-index:3}
+.chapters::before{content:"";position:absolute;left:5px;top:10px;bottom:10px;width:1px;background:rgba(230,214,171,.2)}
+.chapters i.fill{position:absolute;left:5px;top:10px;width:1px;background:var(--gold-light);height:var(--fill,0%);max-height:calc(100% - 20px);transition:height .2s}
+.ch{display:flex;align-items:center;gap:12px;padding:4px 0;color:rgba(248,243,234,.45);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;transition:.4s var(--ease);position:relative}
+.ch b{width:11px;height:11px;border-radius:50%;border:1px solid rgba(230,214,171,.5);background:#141414;transition:.4s var(--ease);flex-shrink:0;font-weight:400}
+.ch.past b{background:var(--gold);border-color:var(--gold)}
+.ch.on{color:var(--gold-light)}
+.ch.on b{background:var(--gold-light);border-color:var(--gold-light);box-shadow:0 0 0 4px rgba(220,194,134,.2)}
+.ch:hover{color:var(--ivory)}
+.ch span{opacity:0;transform:translateX(-6px);transition:.4s var(--ease)}
+.ch.on span,.chapters:hover .ch span{opacity:1;transform:none}
+#introCanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.intro-ui{position:absolute;inset:0;pointer-events:none}
+.intro-ctrl{position:absolute;top:100px;right:24px;display:flex;gap:10px;pointer-events:auto;z-index:3}
+.intro-ctrl button{color:rgba(248,243,234,.75);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:9px 16px;border:1px solid rgba(248,243,234,.25);border-radius:999px;transition:.3s;background:rgba(0,0,0,.2);backdrop-filter:blur(4px)}
+.intro-ctrl button:hover{color:var(--gold-soft);border-color:var(--gold-soft)}
+.intro-caption{position:absolute;left:50%;top:21%;transform:translateX(-50%);text-align:center;font-family:var(--font-display);font-style:italic;font-size:clamp(1.1rem,2.2vw,1.6rem);color:rgba(248,243,234,.9);text-shadow:0 2px 20px rgba(0,0,0,.8);transition:opacity .5s;white-space:nowrap}
+.intro-title{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 24px 60px;opacity:0;transform:translateY(16px);transition:opacity 1.4s var(--ease),transform 1.4s var(--ease)}
+.intro-title.show{opacity:1;transform:none;pointer-events:auto}
+.intro-title small{font-size:.78rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold-soft);margin-bottom:16px}
 .intro-title h1{font-size:clamp(3rem,9vw,7rem);color:var(--ivory);text-shadow:0 8px 60px rgba(0,0,0,.6)}
 .intro-title h1 em{color:var(--gold-light);font-style:italic;font-weight:500}
-.intro-title p{color:rgba(248,243,234,.85);margin:14px 0 34px;font-size:1.05rem;text-shadow:0 2px 20px rgba(0,0,0,.7)}
+.intro-title p{color:rgba(248,243,234,.9);margin:12px 0 30px;font-size:1.08rem;max-width:560px;text-shadow:0 2px 20px rgba(0,0,0,.8)}
+.intro-ctas{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+.dove-hint{margin-top:22px;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(230,214,171,.6)}
+.scroll-down{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:auto;color:var(--gold-soft);z-index:3}
+.scroll-down span{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;opacity:.85;transition:.5s}
+.scroll-down i{width:46px;height:46px;border-radius:50%;border:1px solid rgba(230,214,171,.55);display:grid;place-items:center;animation:bob 1.8s ease-in-out infinite;background:rgba(0,0,0,.25);backdrop-filter:blur(4px);transition:.5s}
+.scroll-down svg{width:20px;height:20px}
+.scroll-down.loud i{width:56px;height:56px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--wine-deep);border-color:transparent;box-shadow:0 0 0 0 rgba(220,194,134,.6);animation:bob 1.8s ease-in-out infinite,ring 1.8s infinite}
+.scroll-down.loud span{color:var(--gold-light);opacity:1}
+@keyframes bob{50%{transform:translateY(7px)}}
+@keyframes ring{0%{box-shadow:0 0 0 0 rgba(220,194,134,.55)}100%{box-shadow:0 0 0 22px rgba(220,194,134,0)}}
+@media (max-width:860px){.chapters{left:14px}.ch span{display:none}}
+.dove{position:fixed;z-index:150;pointer-events:none;width:54px;height:40px;left:0;top:0}
+.dove svg{width:100%;height:100%;overflow:visible}
+.dove .wing{transform-origin:28px 20px;animation:flap .22s ease-in-out infinite alternate}
+.dove .wing2{animation-delay:.11s}
+@keyframes flap{from{transform:scaleY(1)}to{transform:scaleY(-.55)}}
 
 /* ==========================================================
    HEADER
@@ -89,6 +114,7 @@ nav ul{display:flex;gap:30px;list-style:none;align-items:center}
 nav a{font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(248,243,234,.88);font-weight:400;position:relative;padding:6px 0;transition:color .3s}
 nav a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--gold);transition:width .4s var(--ease)}
 nav a:hover::after,nav a.active::after{width:100%}
+nav a.btn::after{display:none}
 header.scrolled nav a{color:var(--ink)}
 nav .btn{padding:10px 22px;font-size:.78rem}
 header.scrolled nav .btn-gold{color:var(--wine-deep)}
@@ -97,34 +123,9 @@ header.scrolled nav .btn-gold{color:var(--wine-deep)}
 header.scrolled .burger span{background:var(--ink)}
 
 /* ==========================================================
-   HERO
+   BEWERTUNGEN
    ========================================================== */
-.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--ivory);background:radial-gradient(ellipse at 30% 20%,#5a2230 0%,var(--wine-deep) 55%,#2a0e15 100%);overflow:hidden;cursor:crosshair}
-#heroCanvas{position:absolute;inset:0;width:100%;height:100%}
-.hero-lines{position:absolute;inset:0;width:100%;height:100%;opacity:.55;pointer-events:none}
-.hero-lines path{fill:none;stroke:var(--gold);stroke-width:1.1}
-.hero-content{position:relative;z-index:2;max-width:860px;padding:130px 24px 80px}
-.hero h1{color:var(--ivory);font-size:clamp(2.6rem,6.4vw,4.9rem);margin-bottom:22px}
-.hero h1 em{color:var(--gold-light);font-weight:500}
-.hero p.lead{color:var(--gold-soft);font-size:1.12rem;max-width:560px;margin:0 auto 38px}
-.hero-ctas{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-.hero-hint{margin-top:46px;font-size:.75rem;letter-spacing:.24em;text-transform:uppercase;color:rgba(230,214,171,.6);display:flex;align-items:center;justify-content:center;gap:10px}
-.hero-hint svg{width:18px;height:18px;animation:bob 2.4s ease-in-out infinite}
-@keyframes bob{50%{transform:translateY(-5px)}}
-.scroll-cue{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);width:24px;height:40px;border:1px solid rgba(230,214,171,.45);border-radius:14px;z-index:2}
-.scroll-cue::after{content:"";position:absolute;left:50%;top:8px;width:3px;height:8px;margin-left:-1.5px;background:var(--gold-soft);border-radius:2px;animation:cue 2s infinite}
-@keyframes cue{0%{opacity:0;transform:translateY(0)}40%{opacity:1}100%{opacity:0;transform:translateY(14px)}}
-/* Taube */
-.dove{position:fixed;z-index:150;pointer-events:none;width:54px;height:40px;left:0;top:0}
-.dove svg{width:100%;height:100%;overflow:visible}
-.dove .wing{transform-origin:28px 20px;animation:flap .22s ease-in-out infinite alternate}
-.dove .wing2{animation-delay:.11s}
-@keyframes flap{from{transform:scaleY(1)}to{transform:scaleY(-.55)}}
-
-/* ==========================================================
-   MARQUEE – Bewertungen
-   ========================================================== */
-.reviews{background:var(--ivory-soft);padding:90px 0 80px;overflow:hidden}
+.reviews{background:var(--ivory-soft);padding:100px 0 80px;overflow:hidden}
 .marquee{display:flex;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);padding:10px 0}
 .marquee + .marquee{margin-top:22px}
 .track{display:flex;gap:22px;flex-shrink:0;padding-right:22px;animation:scroll 60s linear infinite}
@@ -183,11 +184,10 @@ header.scrolled .burger span{background:var(--ink)}
    ========================================================== */
 .config{background:linear-gradient(180deg,var(--ivory) 0%,var(--ivory-soft) 100%)}
 .config-wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:start}
-.config-wrap .stage{position:sticky;top:100px}
-.stage{border-radius:var(--radius-l);overflow:hidden;position:relative;aspect-ratio:600/470;box-shadow:0 30px 70px -30px var(--shadow);background:var(--c-bg,#2a0e15);transition:background .8s var(--ease)}
+.stage{border-radius:var(--radius-l);overflow:hidden;position:sticky;top:100px;aspect-ratio:600/470;box-shadow:0 30px 70px -30px var(--shadow);background:var(--c-bg,#2a0e15);transition:background .8s var(--ease)}
 .stage svg{width:100%;height:100%;display:block}
-.stage svg *{transition:fill .8s var(--ease),stroke .8s var(--ease),opacity .6s var(--ease),transform .6s var(--ease)}
-.stage .badge{position:absolute;left:20px;top:20px;background:rgba(248,243,234,.92);padding:8px 16px;border-radius:999px;font-size:.78rem;color:var(--wine-deep);font-weight:500;letter-spacing:.04em;backdrop-filter:blur(6px)}
+.stage svg *{transition:fill .8s var(--ease),stroke .8s var(--ease),opacity .6s var(--ease)}
+.stage .badge{position:absolute;left:20px;top:20px;background:rgba(248,243,234,.92);padding:8px 16px;border-radius:999px;font-size:.78rem;color:var(--wine-deep);font-weight:500;letter-spacing:.04em}
 .stage .hidden-el{opacity:0}
 .panel{background:var(--white);border-radius:var(--radius-l);padding:34px;box-shadow:0 20px 50px -30px var(--shadow);border:1px solid var(--line)}
 .panel h4{font-family:var(--font-body);font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);font-weight:500;margin:0 0 12px}
@@ -196,7 +196,7 @@ header.scrolled .burger span{background:var(--ink)}
 .chip{padding:8px 15px;border-radius:999px;border:1px solid var(--line);font-size:.83rem;transition:all .3s var(--ease);display:inline-flex;align-items:center;gap:8px;background:var(--white)}
 .chip:hover{border-color:var(--gold)}
 .chip.on{background:var(--wine-deep);color:var(--ivory);border-color:var(--wine-deep)}
-.swatch{display:inline-flex;gap:0}
+.swatch{display:inline-flex}
 .swatch i{width:12px;height:12px;border-radius:50%;display:block;border:1px solid rgba(0,0,0,.08)}
 .swatch i+i{margin-left:-4px}
 .range-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
@@ -204,20 +204,40 @@ header.scrolled .burger span{background:var(--ink)}
 input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:4px;background:linear-gradient(90deg,var(--gold) var(--p,30%),var(--ivory-soft) var(--p,30%));outline:none}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--wine-deep);border:3px solid var(--gold-light);cursor:pointer;box-shadow:0 4px 12px var(--shadow)}
 input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--wine-deep);border:3px solid var(--gold-light);cursor:pointer}
-.panel .meta{font-size:.82rem;color:var(--ink-faint);margin-top:8px}
+.panel .meta{font-size:.82rem;color:var(--ink-faint)}
 .summary{background:var(--wine-tint);border-radius:var(--radius-m);padding:16px 18px;font-size:.86rem;color:var(--wine-deep);margin-bottom:20px}
 
 /* ==========================================================
-   VORHER / NACHHER
+   STANDARD vs. JOKIS
    ========================================================== */
-.compare{position:relative;border-radius:var(--radius-l);overflow:hidden;aspect-ratio:16/8;max-height:560px;width:100%;box-shadow:0 30px 70px -30px var(--shadow);user-select:none;touch-action:pan-y;background:var(--wine-deep);cursor:ew-resize}
+.vs{background:var(--white)}
+.compare{position:relative;border-radius:var(--radius-l);overflow:hidden;aspect-ratio:16/9;max-height:620px;width:100%;box-shadow:0 30px 70px -30px var(--shadow);user-select:none;touch-action:pan-y;cursor:ew-resize;background:#ccc}
 .compare img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.compare .before.sim{filter:grayscale(.9) brightness(.8) contrast(.82) sepia(.15) hue-rotate(170deg) saturate(.7)}
+.compare .vs-note{position:absolute;left:20px;bottom:20px;padding:7px 14px;border-radius:999px;font-size:.7rem;letter-spacing:.06em;background:rgba(0,0,0,.55);color:#fff;border:1px dashed rgba(255,255,255,.5)}
+.vs-caption{text-align:center;font-size:.8rem;color:var(--ink-faint);margin-top:14px}
 .compare .after{clip-path:inset(0 0 0 var(--x,50%))}
-.compare .before{filter:grayscale(1) brightness(.75) contrast(.9)}
-.compare .handle{position:absolute;top:0;bottom:0;left:var(--x,50%);width:2px;background:var(--gold-light);transform:translateX(-1px);pointer-events:none}
-.compare .handle::after{content:"⟷";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:52px;height:52px;border-radius:50%;background:var(--ivory);color:var(--wine-deep);display:grid;place-items:center;font-size:1.2rem;box-shadow:0 8px 24px rgba(0,0,0,.3)}
-.compare .lbl{position:absolute;top:20px;padding:6px 14px;border-radius:999px;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;background:rgba(0,0,0,.45);color:#fff;backdrop-filter:blur(4px)}
-.compare .lbl.l{left:20px}.compare .lbl.r{right:20px;background:rgba(199,166,93,.9);color:var(--wine-deep)}
+.compare .handle{position:absolute;top:0;bottom:0;left:var(--x,50%);width:3px;background:var(--gold-light);transform:translateX(-1.5px);pointer-events:none;box-shadow:0 0 20px rgba(220,194,134,.8)}
+.compare .handle::after{content:"⟷";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:56px;height:56px;border-radius:50%;background:var(--ivory);color:var(--wine-deep);display:grid;place-items:center;font-size:1.25rem;box-shadow:0 8px 24px rgba(0,0,0,.3);border:2px solid var(--gold)}
+.compare .lbl{position:absolute;top:20px;padding:7px 16px;border-radius:999px;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;font-weight:500}
+.compare .lbl.l{left:20px;background:rgba(255,255,255,.85);color:#555}
+.compare .lbl.r{right:20px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--wine-deep)}
+.vs-table{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:34px}
+.vs-col{border-radius:var(--radius-m);padding:28px 30px}
+.vs-col h3{font-size:1.2rem;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.vs-col ul{list-style:none}
+.vs-col li{padding:9px 0 9px 32px;position:relative;font-size:.93rem;border-bottom:1px solid var(--line)}
+.vs-col li:last-child{border-bottom:none}
+.vs-col li::before{position:absolute;left:0;top:9px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:.72rem;font-weight:600}
+.vs-col.bad{background:#f4f4f2;color:#6b6b6b}
+.vs-col.bad h3{color:#6b6b6b}
+.vs-col.bad li::before{content:"✕";background:#e2e2df;color:#888}
+.vs-col.good{background:var(--wine-deep);color:var(--ivory);box-shadow:0 30px 60px -30px rgba(63,22,32,.6);transform:scale(1.02)}
+.vs-col.good h3{color:var(--gold-light)}
+.vs-col.good li{border-color:rgba(230,214,171,.15)}
+.vs-col.good li::before{content:"✓";background:var(--gold);color:var(--wine-deep)}
+.vs-claim{text-align:center;margin-top:44px;font-family:var(--font-display);font-size:clamp(1.4rem,2.6vw,2rem);color:var(--wine-deep)}
+.vs-claim em{color:var(--gold);font-style:italic}
 
 /* ==========================================================
    ABLAUF
@@ -245,34 +265,55 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .culture .k{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(230,214,171,.6);margin-bottom:10px;display:block}
 
 /* ==========================================================
-   GALERIE
+   GALERIE – 3D-Karussell
    ========================================================== */
-.gallery-grid{columns:4 240px;column-gap:16px}
-.g-item{break-inside:avoid;margin-bottom:16px;border-radius:var(--radius-m);overflow:hidden;position:relative;cursor:zoom-in;background:var(--ivory-soft)}
-.g-item img{width:100%;transition:transform 1s var(--ease),filter .6s}
-.g-item::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(63,22,32,.55),transparent 50%);opacity:0;transition:opacity .5s}
-.g-item:hover img{transform:scale(1.06)}
-.g-item:hover::after{opacity:1}
+.gallery{background:linear-gradient(180deg,var(--ivory) 0%,var(--ivory-soft) 100%);overflow:hidden}
+.cf{position:relative;height:clamp(300px,46vw,520px);perspective:1400px;touch-action:pan-y;user-select:none;cursor:grab}
+.cf.drag{cursor:grabbing}
+.cf-item{position:absolute;left:50%;top:50%;width:min(620px,74vw);aspect-ratio:4/3;border-radius:var(--radius-l);overflow:hidden;transition:transform .8s var(--ease),opacity .8s var(--ease),filter .8s;box-shadow:0 30px 70px -25px rgba(63,22,32,.45);background:linear-gradient(135deg,var(--wine),var(--wine-deep))}
+.cf.drag .cf-item{transition:none}
+.cf-item img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.cf-item .ph{position:absolute;inset:0;display:grid;place-items:center;color:var(--gold-soft);font-family:var(--font-display);font-size:1.4rem;font-style:italic}
+.cf-item::after{content:"";position:absolute;inset:0;background:rgba(42,14,21,.45);transition:opacity .8s;pointer-events:none}
+.cf-item.active::after{opacity:0}
+.cf-item .zoom{position:absolute;right:16px;bottom:16px;width:44px;height:44px;border-radius:50%;background:rgba(248,243,234,.92);color:var(--wine-deep);display:grid;place-items:center;opacity:0;transition:.4s;z-index:2}
+.cf-item.active:hover .zoom{opacity:1}
+.cf-nav{display:flex;align-items:center;justify-content:center;gap:22px;margin-top:34px}
+.cf-btn{width:54px;height:54px;border-radius:50%;border:1px solid var(--gold-soft);display:grid;place-items:center;color:var(--wine-deep);font-size:1.3rem;transition:.3s;background:var(--white)}
+.cf-btn:hover{background:var(--wine-deep);color:var(--gold-light);border-color:var(--wine-deep)}
+.cf-count{font-family:var(--font-display);font-size:1.1rem;color:var(--wine);min-width:80px;text-align:center}
+.cf-count b{font-size:1.6rem}
+.cf-thumbs{display:flex;gap:10px;justify-content:center;margin-top:26px;flex-wrap:wrap}
+.cf-thumb{width:64px;height:48px;border-radius:8px;overflow:hidden;opacity:.45;transition:.4s var(--ease);border:2px solid transparent;background:linear-gradient(135deg,var(--wine),var(--wine-deep))}
+.cf-thumb img{width:100%;height:100%;object-fit:cover}
+.cf-thumb.on{opacity:1;border-color:var(--gold);transform:translateY(-4px)}
+.cf-bar{height:2px;background:var(--line);max-width:320px;margin:22px auto 0;border-radius:2px;overflow:hidden}
+.cf-bar i{display:block;height:100%;width:0;background:var(--gold)}
 .lightbox{position:fixed;inset:0;background:rgba(20,8,11,.94);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:.4s}
 .lightbox.open{opacity:1;visibility:visible}
 .lightbox img{max-width:88vw;max-height:84vh;border-radius:var(--radius-s);box-shadow:0 30px 80px rgba(0,0,0,.6)}
 .lb-btn{position:absolute;color:var(--ivory);width:54px;height:54px;border-radius:50%;border:1px solid rgba(248,243,234,.3);display:grid;place-items:center;font-size:1.3rem;transition:.3s}
 .lb-btn:hover{border-color:var(--gold);color:var(--gold-light)}
 .lb-prev{left:3vw}.lb-next{right:3vw}.lb-close{top:3vh;right:3vw}
-.lb-count{position:absolute;bottom:4vh;color:rgba(248,243,234,.6);font-size:.8rem;letter-spacing:.2em}
 
 /* ==========================================================
    TEAM
    ========================================================== */
 .team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
-.member{text-align:center;padding:34px 22px;background:var(--white);border-radius:var(--radius-m);border:1px solid var(--line);transition:all .5s var(--ease);position:relative;overflow:hidden}
-.member::before{content:"";position:absolute;left:0;right:0;top:0;height:90px;background:linear-gradient(135deg,var(--wine),var(--wine-deep));transition:height .6s var(--ease)}
+.member{text-align:center;padding:30px 22px 32px;background:var(--white);border-radius:var(--radius-m);border:1px solid var(--line);transition:all .5s var(--ease);position:relative;overflow:hidden}
+.member::before{content:"";position:absolute;left:0;right:0;top:0;height:96px;background:linear-gradient(135deg,var(--wine),var(--wine-deep));transition:height .6s var(--ease)}
+.member:hover{transform:translateY(-6px);box-shadow:0 30px 50px -30px var(--shadow)}
 .member:hover::before{height:100%}
 .member:hover h3,.member:hover .role,.member:hover p{color:var(--ivory)}
-.member .ph{width:110px;height:110px;border-radius:50%;margin:16px auto 18px;background:var(--ivory-soft);border:4px solid var(--white);position:relative;display:grid;place-items:center;font-family:var(--font-display);font-size:2rem;color:var(--wine);box-shadow:0 10px 30px -10px var(--shadow)}
-.member h3{font-size:1.2rem;position:relative;transition:color .4s}
-.member .role{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);position:relative;margin:4px 0 10px;font-weight:500}
+.member:hover .role{color:var(--gold-light)}
+.member .ph{width:128px;height:128px;border-radius:50%;margin:12px auto 18px;border:4px solid var(--white);position:relative;overflow:hidden;box-shadow:0 12px 30px -10px var(--shadow);transition:transform .6s var(--ease)}
+.member:hover .ph{transform:scale(1.06) rotate(-3deg)}
+.member .ph svg{width:100%;height:100%;display:block}
+.member h3{font-size:1.25rem;position:relative;transition:color .4s}
+.member .role{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);position:relative;margin:4px 0 10px;font-weight:500;transition:color .4s}
 .member p{font-size:.86rem;color:var(--ink-soft);position:relative;transition:color .4s}
+.member .fact{position:relative;margin-top:14px;font-size:.8rem;font-style:italic;color:var(--gold-light);max-height:0;opacity:0;overflow:hidden;transition:all .5s var(--ease)}
+.member:hover .fact{max-height:80px;opacity:1}
 .team-note{text-align:center;margin-top:46px;font-family:var(--font-display);font-style:italic;font-size:1.25rem;color:var(--wine)}
 
 /* ==========================================================
@@ -288,7 +329,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .qa .a p{padding:0 4px 24px;color:var(--ink-soft);font-size:.95rem}
 
 /* ==========================================================
-   KONTAKT
+   KONTAKT – zwei Varianten
    ========================================================== */
 .contact{background:var(--wine-deep);color:var(--ivory);overflow:hidden}
 .contact::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(199,166,93,.16),transparent 45%)}
@@ -296,27 +337,34 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .contact .section-head p{color:rgba(248,243,234,.75)}
 .contact-wrap{display:grid;grid-template-columns:1.35fr 1fr;gap:40px;position:relative}
 .form{background:rgba(248,243,234,.04);border:1px solid rgba(230,214,171,.18);border-radius:var(--radius-l);padding:36px}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px;background:rgba(0,0,0,.2);padding:6px;border-radius:18px}
+.mode{padding:14px 16px;border-radius:13px;text-align:left;transition:all .4s var(--ease);color:rgba(248,243,234,.7)}
+.mode b{display:block;font-weight:500;font-size:.95rem;color:var(--ivory)}
+.mode small{font-size:.76rem}
+.mode.on{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--wine-deep)}
+.mode.on b{color:var(--wine-deep)}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-grid[hidden]{display:none}
 .field{display:flex;flex-direction:column;gap:6px}
 .field.full{grid-column:1/-1}
-.field label{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-soft)}
-.field input,.field select,.field textarea{background:rgba(248,243,234,.06);border:1px solid rgba(230,214,171,.22);border-radius:var(--radius-s);padding:13px 14px;color:var(--ivory);font:inherit;font-size:.92rem;transition:.3s;outline:none}
+.field label,.field .lab{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-soft)}
+.field input,.field select,.field textarea{background:rgba(248,243,234,.06);border:1px solid rgba(230,214,171,.22);border-radius:var(--radius-s);padding:13px 14px;color:var(--ivory);font:inherit;font-size:.92rem;transition:.3s;outline:none;width:100%}
 .field select option{color:var(--ink)}
 .field input::placeholder,.field textarea::placeholder{color:rgba(248,243,234,.35)}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);background:rgba(248,243,234,.1)}
 .field input[type=date]{color-scheme:dark}
-.field textarea{min-height:110px;resize:vertical}
+.field textarea{min-height:100px;resize:vertical}
 .checks{display:flex;flex-wrap:wrap;gap:8px}
 .checks label{text-transform:none;letter-spacing:0;font-size:.85rem;color:var(--ivory);border:1px solid rgba(230,214,171,.25);padding:8px 14px;border-radius:999px;cursor:pointer;transition:.3s;display:inline-flex;align-items:center;gap:8px}
 .checks input{display:none}
 .checks label:has(input:checked){background:var(--gold);color:var(--wine-deep);border-color:var(--gold)}
+.countdown{grid-column:1/-1;font-size:.86rem;color:var(--gold-light);font-style:italic}
 .countdown:empty{display:none}
-.countdown{grid-column:1/-1;font-size:.86rem;color:var(--gold-light);min-height:1.2em;font-style:italic}
 .form-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px;align-items:center}
 .form-actions small{font-size:.76rem;color:rgba(248,243,234,.55);flex-basis:100%}
 .info{display:flex;flex-direction:column;gap:16px}
 .info-card{border:1px solid rgba(230,214,171,.18);border-radius:var(--radius-m);padding:22px 24px;display:flex;gap:18px;align-items:center;transition:.4s var(--ease);background:rgba(248,243,234,.03)}
-.info-card:hover{border-color:var(--gold);background:rgba(199,166,93,.08);transform:translateX(4px)}
+a.info-card:hover{border-color:var(--gold);background:rgba(199,166,93,.08);transform:translateX(4px)}
 .info-card .i{width:46px;height:46px;border-radius:50%;background:rgba(199,166,93,.15);display:grid;place-items:center;color:var(--gold-light);flex-shrink:0}
 .info-card .i svg{width:20px;height:20px}
 .info-card small{display:block;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-soft)}
@@ -324,7 +372,9 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .socials{display:flex;gap:10px;margin-top:6px}
 .socials a{flex:1;text-align:center;padding:12px;border-radius:var(--radius-s);border:1px solid rgba(230,214,171,.25);font-size:.82rem;color:var(--gold-soft);transition:.3s}
 .socials a:hover{background:var(--gold);color:var(--wine-deep);border-color:var(--gold)}
-.toast{position:fixed;bottom:30px;left:50%;transform:translate(-50%,120px);background:var(--ink);color:var(--ivory);padding:14px 26px;border-radius:999px;font-size:.88rem;z-index:600;transition:transform .5s var(--ease);box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.ai-card{border:1px dashed rgba(230,214,171,.35);border-radius:var(--radius-m);padding:20px 24px;font-size:.88rem;color:rgba(248,243,234,.8)}
+.ai-card button{color:var(--gold-light);text-decoration:underline;text-underline-offset:3px}
+.toast{position:fixed;bottom:30px;left:50%;transform:translate(-50%,140px);background:var(--ink);color:var(--ivory);padding:14px 26px;border-radius:999px;font-size:.88rem;z-index:600;transition:transform .5s var(--ease);box-shadow:0 10px 40px rgba(0,0,0,.3);white-space:nowrap}
 .toast.show{transform:translate(-50%,0)}
 
 /* ==========================================================
@@ -338,13 +388,50 @@ footer li{padding:4px 0}
 footer a:hover{color:var(--gold-light)}
 .trust{display:flex;gap:24px;flex-wrap:wrap;padding:22px 0;border-top:1px solid rgba(230,214,171,.12);border-bottom:1px solid rgba(230,214,171,.12);margin-bottom:24px;font-size:.82rem;color:var(--gold-soft)}
 .foot-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.78rem;color:rgba(248,243,234,.45)}
-.replay{color:var(--gold-soft);text-decoration:underline;text-underline-offset:3px}
 
-.wa-float{position:fixed;right:24px;bottom:24px;width:58px;height:58px;border-radius:50%;background:var(--wine-deep);border:2px solid var(--gold-soft);display:grid;place-items:center;color:var(--gold-light);z-index:90;box-shadow:0 12px 30px rgba(63,22,32,.4);transition:transform .4s var(--ease)}
-.wa-float:hover{transform:scale(1.08) rotate(-6deg)}
-.wa-float svg{width:26px;height:26px}
-.wa-float::before{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid var(--gold);animation:pulse 2.6s infinite;opacity:0}
+/* ==========================================================
+   KI-CHAT
+   ========================================================== */
+.chat-launch{position:fixed;right:24px;bottom:24px;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,var(--wine),var(--wine-deep));border:2px solid var(--gold-soft);display:grid;place-items:center;color:var(--gold-light);z-index:300;box-shadow:0 14px 34px rgba(63,22,32,.45);transition:transform .4s var(--ease)}
+.chat-launch:hover{transform:scale(1.07)}
+.chat-launch svg{width:26px;height:26px}
+.chat-launch .ai{position:absolute;top:-4px;right:-4px;background:var(--gold);color:var(--wine-deep);font-size:.62rem;font-weight:600;padding:2px 7px;border-radius:999px;letter-spacing:.06em}
+.chat-launch::before{content:"";position:absolute;inset:-7px;border-radius:50%;border:1px solid var(--gold);animation:pulse 2.6s infinite;opacity:0}
 @keyframes pulse{0%{transform:scale(.9);opacity:.8}100%{transform:scale(1.4);opacity:0}}
+.chat-teaser{position:fixed;right:98px;bottom:36px;background:var(--white);color:var(--ink);padding:12px 18px;border-radius:16px 16px 4px 16px;font-size:.86rem;box-shadow:0 14px 40px -10px var(--shadow);z-index:299;opacity:0;transform:translateY(10px);transition:.5s var(--ease);pointer-events:none;max-width:240px}
+.chat-teaser.show{opacity:1;transform:none;pointer-events:auto;cursor:pointer}
+.chat{position:fixed;right:24px;bottom:100px;width:380px;max-width:calc(100vw - 32px);height:560px;max-height:calc(100vh - 130px);background:var(--ivory);border-radius:22px;box-shadow:0 30px 80px -20px rgba(42,14,21,.55);z-index:301;display:flex;flex-direction:column;overflow:hidden;opacity:0;transform:translateY(20px) scale(.97);transform-origin:bottom right;pointer-events:none;transition:.45s var(--ease);border:1px solid var(--line)}
+.chat.open{opacity:1;transform:none;pointer-events:auto}
+.chat-head{background:linear-gradient(135deg,var(--wine),var(--wine-deep));color:var(--ivory);padding:16px 18px;display:flex;align-items:center;gap:12px}
+.chat-head .av{width:42px;height:42px;border-radius:50%;background:rgba(248,243,234,.12);border:1px solid rgba(230,214,171,.4);display:grid;place-items:center;color:var(--gold-light)}
+.chat-head .av svg{width:22px;height:22px}
+.chat-head b{font-family:var(--font-display);font-size:1.08rem;font-weight:600;display:block;line-height:1.2}
+.chat-head small{font-size:.74rem;color:var(--gold-soft);display:flex;align-items:center;gap:6px}
+.chat-head small::before{content:"";width:7px;height:7px;border-radius:50%;background:#7bd389}
+.chat-head .x{margin-left:auto;display:flex;gap:6px}
+.chat-head .x a,.chat-head .x button{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:var(--gold-soft);transition:.3s}
+.chat-head .x a:hover,.chat-head .x button:hover{background:rgba(248,243,234,.12)}
+.chat-body{flex:1;overflow-y:auto;padding:18px 16px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
+.msg{max-width:84%;padding:11px 15px;border-radius:18px;font-size:.88rem;line-height:1.55;animation:pop .35s var(--ease)}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}}
+.msg.bot{background:var(--white);border:1px solid var(--line);border-bottom-left-radius:5px;align-self:flex-start;color:var(--ink)}
+.msg.me{background:var(--wine-deep);color:var(--ivory);border-bottom-right-radius:5px;align-self:flex-end}
+.msg a{color:var(--wine);font-weight:500;text-decoration:underline;text-underline-offset:2px}
+.msg .act{display:inline-block;margin-top:8px;padding:6px 12px;border-radius:999px;background:var(--gold);color:var(--wine-deep);font-size:.8rem;text-decoration:none;font-weight:500}
+.typing{display:flex;gap:4px;padding:14px 16px}
+.typing i{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:blink 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
+.quick{display:flex;gap:6px;overflow-x:auto;padding:4px 16px 10px;scrollbar-width:none}
+.quick::-webkit-scrollbar{display:none}
+.quick button{flex-shrink:0;white-space:nowrap;font-size:.78rem;padding:7px 12px;border-radius:999px;border:1px solid var(--gold-soft);color:var(--wine-deep);background:var(--white);transition:.3s}
+.quick button:hover{background:var(--wine-deep);color:var(--ivory);border-color:var(--wine-deep)}
+.chat-input{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--line);background:var(--white)}
+.chat-input input{flex:1;border:1px solid var(--line);border-radius:999px;padding:11px 16px;font:inherit;font-size:.88rem;outline:none;background:var(--ivory)}
+.chat-input input:focus{border-color:var(--gold)}
+.chat-input button{width:44px;height:44px;border-radius:50%;background:var(--wine-deep);color:var(--gold-light);display:grid;place-items:center;flex-shrink:0;transition:.3s}
+.chat-input button:hover{background:var(--wine)}
+.chat-foot{font-size:.68rem;color:var(--ink-faint);text-align:center;padding:0 0 10px;background:var(--white)}
 
 /* ==========================================================
    RESPONSIVE
@@ -352,6 +439,7 @@ footer a:hover{color:var(--gold-light)}
 @media (max-width:1024px){
   .offers-grid,.team-grid{grid-template-columns:repeat(2,1fr)}
   .config-wrap,.contact-wrap{grid-template-columns:1fr}
+  .stage{position:relative;top:0}
   .culture-grid{grid-template-columns:1fr 1fr}
   .foot-grid{grid-template-columns:1fr 1fr}
 }
@@ -369,35 +457,28 @@ footer a:hover{color:var(--gold-light)}
   .steps{grid-template-columns:1fr 1fr;row-gap:44px}
   .steps .rail{display:none}
   .pad{padding:80px 0}
+  .vs-table{grid-template-columns:1fr}
+  .vs-col.good{transform:none}
+  .intro-ctrl{top:90px;right:16px}
 }
 @media (max-width:600px){
   .offers-grid,.team-grid,.culture-grid,.form-grid,.foot-grid{grid-template-columns:1fr}
   .review{width:290px}
   .compare{aspect-ratio:4/3}
   .panel,.form{padding:24px}
-  .hero .eyebrow::before{display:none}
-  .config-wrap .stage{position:relative;top:0}
+  .modes{grid-template-columns:1fr}
+  .cf-thumbs{display:none}
+  .intro-caption{white-space:normal;width:90%}
+  .chat{right:16px;bottom:96px}
+  .chat-teaser{display:none}
 }
 @media (prefers-reduced-motion:reduce){
   .track{animation:none}
-  *{scroll-behavior:auto}
+  html{scroll-behavior:auto}
 }
 </style>
 </head>
-<body class="locked">
-
-<!-- ======================= INTRO ======================= -->
-<div id="intro" aria-label="Intro-Animation">
-  <canvas id="introCanvas"></canvas>
-  <button class="intro-skip" id="skipIntro">Intro überspringen ›</button>
-  <div class="intro-caption" id="introCaption">Ein leerer Saal …</div>
-  <div class="intro-title" id="introTitle">
-    <small>Mönchengladbach · seit 2025</small>
-    <h1>Jokis <em>Deko</em></h1>
-    <p>Wir bringen Farbe und Licht in Ihren schönsten Tag.</p>
-    <button class="btn btn-gold" id="enterSite">Website entdecken →</button>
-  </div>
-</div>
+<body>
 
 <div class="progress" id="progress"></div>
 
@@ -422,27 +503,34 @@ footer a:hover{color:var(--gold-light)}
   </div>
 </header>
 
-<!-- ======================= HERO ======================= -->
-<section class="hero" id="start">
-  <canvas id="heroCanvas"></canvas>
-  <svg class="hero-lines" viewBox="0 0 1440 800" preserveAspectRatio="none" aria-hidden="true">
-    <path id="wave1" d="M0,420 C320,300 520,560 820,430 C1080,320 1240,360 1440,280"/>
-    <path id="wave2" d="M0,520 C260,460 600,640 900,520 C1140,430 1300,500 1440,420" style="opacity:.6"/>
-  </svg>
-  <div class="hero-content">
-    <span class="eyebrow reveal" style="color:var(--gold-soft)">Hochzeitsdeko · Hochzeitstauben · Antrag</span>
-    <h1 class="reveal d1">Unvergessliche Momente<br>für Ihre <em>Hochzeit</em></h1>
-    <p class="lead reveal d2">Weiße Hochzeitstauben, elegante Dekoration und liebevolle Details – für Hochzeiten aller Kulturen in Mönchengladbach und Umgebung.</p>
-    <div class="hero-ctas reveal d3">
-      <a href="#kontakt" class="btn btn-gold">Jetzt anfragen</a>
-      <a href="#konfigurator" class="btn btn-ghost">Deko-Planer ausprobieren</a>
+<!-- ======================= INTRO (fester Startbereich) ======================= -->
+<section id="intro" aria-label="Intro">
+  <span id="start" style="position:absolute;top:0"></span>
+  <div class="intro-sticky">
+  <canvas id="introCanvas"></canvas>
+  <div class="intro-ui">
+    <div class="intro-ctrl">
+      <button id="skipIntro">Zum Ende ›</button>
+      <button id="replayIntro" hidden>↑ Nochmal ansehen</button>
     </div>
-    <div class="hero-hint reveal d3">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11V5a2 2 0 0 1 4 0v6m0-2a2 2 0 0 1 4 0v4a7 7 0 0 1-7 7h-.5A6.5 6.5 0 0 1 3 13.5V12a2 2 0 0 1 4 0"/></svg>
-      Klicken Sie irgendwo – und lassen Sie eine Taube fliegen
+    <nav class="chapters" id="chapters" aria-label="Intro-Kapitel"><i class="fill"></i></nav>
+    <div class="intro-caption" id="introCaption"></div>
+    <div class="intro-title" id="introTitle">
+      <small>Mönchengladbach · seit 2025</small>
+      <h1>Jokis <em>Deko</em></h1>
+      <p>Unvergessliche Momente für Ihre Hochzeit – Dekoration, Licht und weiße Hochzeitstauben.</p>
+      <div class="intro-ctas">
+        <a href="#kontakt" class="btn btn-gold">Jetzt anfragen</a>
+        <a href="#konfigurator" class="btn btn-ghost">Deko-Planer ausprobieren</a>
+      </div>
+      <div class="dove-hint">Tipp: Irgendwo klicken – und eine Taube fliegen lassen</div>
     </div>
+    <a href="#stimmen" class="scroll-down" id="scrollDown">
+      <span id="scrollTxt">Scrollen</span>
+      <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg></i>
+    </a>
   </div>
-  <div class="scroll-cue"></div>
+  </div>
 </section>
 
 <!-- ======================= BEWERTUNGEN ======================= -->
@@ -521,6 +609,48 @@ footer a:hover{color:var(--gold-light)}
   </div>
 </section>
 
+<!-- ======================= STANDARD vs. JOKIS ======================= -->
+<section class="pad vs" id="unterschied">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Standard vs. Jokis</span>
+      <h2>Wir bringen Farbe in Ihren Saal</h2>
+      <p>Ziehen Sie den Regler: gleicher Saal, gleiche Fläche – links mit Standard-Deko, rechts so, wie wir dekorieren.</p>
+    </div>
+    <div class="compare reveal" id="compare">
+      <img class="before" id="vsBefore" alt="Derselbe Saal mit Standard-Deko (beispielhafte Darstellung)">
+      <img class="after" id="vsAfter" alt="Saal dekoriert von Jokis Deko">
+      <span class="lbl l">Standard-Deko</span><span class="lbl r">✦ Jokis Deko</span>
+      <span class="vs-note" id="vsNote">Vorschau · Standard-Bild folgt</span>
+      <div class="handle"></div>
+    </div>
+    <p class="vs-caption">Rechts: echte Dekoration von Jokis. Links: beispielhafte Darstellung desselben Saals mit Standard-Deko.</p>
+    <div class="vs-table">
+      <div class="vs-col bad reveal">
+        <h3>Standard-Deko</h3>
+        <ul>
+          <li>Kaltes Neonlicht, keine Stimmung</li>
+          <li>Plastikstühle ohne Hussen</li>
+          <li>Farben wild gemischt, kein Konzept</li>
+          <li>Deko „von der Stange“, lieblos verteilt</li>
+          <li>Fotos wirken flach und leer</li>
+        </ul>
+      </div>
+      <div class="vs-col good reveal d1">
+        <h3>✦ Jokis Deko</h3>
+        <ul>
+          <li>Warmes Licht mit Kronleuchtern, Kerzen & Lichterketten</li>
+          <li>Stühle mit Hussen oder in edlem Gold</li>
+          <li>Ein Farbkonzept, abgestimmt auf Sie</li>
+          <li>Blumenbogen, Brautpaar-Tisch & echte Highlights</li>
+          <li>Jedes Detail geplant – auf jedem Foto ein Hingucker</li>
+        </ul>
+      </div>
+    </div>
+    <p class="vs-claim reveal">Ihre Gäste spüren den Unterschied. <em>Ihre Fotos zeigen ihn – für immer.</em></p>
+  </div>
+</section>
+
 <!-- ======================= KONFIGURATOR ======================= -->
 <section class="pad config" id="konfigurator">
   <div class="container">
@@ -535,48 +665,39 @@ footer a:hover{color:var(--gold-light)}
         <svg viewBox="0 0 600 470" preserveAspectRatio="xMidYMid meet" id="sceneSvg">
           <defs>
             <radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe9b0" stop-opacity=".9"/><stop offset="100%" stop-color="#ffe9b0" stop-opacity="0"/></radialGradient>
-            <linearGradient id="floorG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#000" stop-opacity=".0"/><stop offset="100%" stop-color="#000" stop-opacity=".35"/></linearGradient>
+            <linearGradient id="floorG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".35"/></linearGradient>
           </defs>
-          <!-- Wand & Boden -->
           <rect width="600" height="470" class="c-wall"/>
           <rect y="330" width="600" height="140" class="c-floor"/>
           <rect y="330" width="600" height="140" fill="url(#floorG)"/>
-          <!-- Lichterketten -->
           <g id="el-lights">
             <path d="M0,40 Q75,80 150,40 T300,40 T450,40 T600,40" fill="none" stroke="#c9b48a" stroke-width="1" opacity=".6"/>
             <g class="bulbs"></g>
           </g>
-          <!-- Bogen -->
           <g id="el-arch">
             <path d="M190,330 L190,175 A110,110 0 0 1 410,175 L410,330" fill="none" class="c-accent-stroke" stroke-width="9" stroke-linecap="round"/>
             <g class="arch-flowers"></g>
           </g>
-          <!-- LOVE -->
           <g id="el-love" class="c-accent-fill" font-family="Playfair Display,serif" font-weight="700" font-size="40" text-anchor="middle">
             <text x="300" y="232" letter-spacing="10">LOVE</text>
           </g>
-          <!-- Teppich -->
           <path d="M255,330 L345,330 L420,470 L180,470 Z" class="c-main-fill" opacity=".95"/>
-          <!-- Blumenständer -->
           <g id="el-stands">
-            <g transform="translate(120,0)"><rect x="-4" y="250" width="8" height="80" class="c-accent-fill"/><rect x="-18" y="326" width="36" height="6" class="c-accent-fill"/><g class="stand-flowers" data-cx="0" data-cy="246"></g></g>
-            <g transform="translate(480,0)"><rect x="-4" y="250" width="8" height="80" class="c-accent-fill"/><rect x="-18" y="326" width="36" height="6" class="c-accent-fill"/><g class="stand-flowers" data-cx="0" data-cy="246"></g></g>
+            <g transform="translate(120,0)"><rect x="-4" y="250" width="8" height="80" class="c-accent-fill"/><rect x="-18" y="326" width="36" height="6" class="c-accent-fill"/><g class="stand-flowers"></g></g>
+            <g transform="translate(480,0)"><rect x="-4" y="250" width="8" height="80" class="c-accent-fill"/><rect x="-18" y="326" width="36" height="6" class="c-accent-fill"/><g class="stand-flowers"></g></g>
           </g>
-          <!-- Brautpaar-Tisch -->
           <g id="el-table">
             <rect x="215" y="350" width="170" height="10" rx="3" class="c-cloth"/>
             <path d="M215,360 L385,360 L392,420 L208,420 Z" class="c-cloth2"/>
             <path d="M215,360 Q250,385 300,365 Q350,385 385,360" fill="none" class="c-accent-stroke" stroke-width="3"/>
             <g class="table-flowers"></g>
           </g>
-          <!-- Kerzen -->
           <g id="el-candles">
             <g transform="translate(70,0)"><rect x="-5" y="380" width="10" height="45" fill="#fbf6ec"/><ellipse cx="0" cy="374" rx="4" ry="8" fill="#ffcf6b"/><circle cx="0" cy="374" r="26" fill="url(#glow)"/></g>
             <g transform="translate(530,0)"><rect x="-5" y="380" width="10" height="45" fill="#fbf6ec"/><ellipse cx="0" cy="374" rx="4" ry="8" fill="#ffcf6b"/><circle cx="0" cy="374" r="26" fill="url(#glow)"/></g>
             <g transform="translate(160,0)"><rect x="-4" y="395" width="8" height="32" fill="#fbf6ec"/><ellipse cx="0" cy="389" rx="3.5" ry="7" fill="#ffcf6b"/><circle cx="0" cy="389" r="22" fill="url(#glow)"/></g>
             <g transform="translate(440,0)"><rect x="-4" y="395" width="8" height="32" fill="#fbf6ec"/><ellipse cx="0" cy="389" rx="3.5" ry="7" fill="#ffcf6b"/><circle cx="0" cy="389" r="22" fill="url(#glow)"/></g>
           </g>
-          <!-- Tauben -->
           <g id="el-doves" fill="#fff">
             <g transform="translate(110,120) scale(1.1)"><path d="M0,10 C8,0 18,2 22,8 C30,-6 42,-8 50,-4 C42,0 36,8 32,14 C40,14 46,18 48,22 C38,22 28,22 20,18 C12,20 4,16 0,10Z"/></g>
             <g transform="translate(440,90) scale(-.9,.9)"><path d="M0,10 C8,0 18,2 22,8 C30,-6 42,-8 50,-4 C42,0 36,8 32,14 C40,14 46,18 48,22 C38,22 28,22 20,18 C12,20 4,16 0,10Z"/></g>
@@ -595,10 +716,7 @@ footer a:hover{color:var(--gold-light)}
             <button class="chip" data-v="Heiratsantrag">Antrag</button>
           </div>
         </div>
-        <div class="group">
-          <h4>Farbwelt</h4>
-          <div class="chips" id="themeChips"></div>
-        </div>
+        <div class="group"><h4>Farbwelt</h4><div class="chips" id="themeChips"></div></div>
         <div class="group">
           <h4>Elemente</h4>
           <div class="chips" id="elChips">
@@ -623,23 +741,6 @@ footer a:hover{color:var(--gold-light)}
   </div>
 </section>
 
-<!-- ======================= VORHER/NACHHER ======================= -->
-<section class="pad" style="padding-top:40px">
-  <div class="container">
-    <div class="section-head reveal">
-      <span class="eyebrow">Vorher · Nachher</span>
-      <h2>Wir bringen Farbe in Ihren Saal</h2>
-      <p>Ziehen Sie den Regler und sehen Sie den Unterschied.</p>
-    </div>
-    <div class="compare reveal" id="compare">
-      <img class="before" src="https://jokis-hochzeitsdeko-mg.netlify.app/images/gallery/IMG-20260817-WA0001.jpg" alt="Saal ohne Farbe" onerror="this.parentNode.style.display='none'">
-      <img class="after" src="https://jokis-hochzeitsdeko-mg.netlify.app/images/gallery/IMG-20260817-WA0001.jpg" alt="Saal mit Jokis Deko">
-      <span class="lbl l">Vorher</span><span class="lbl r">Mit Jokis</span>
-      <div class="handle"></div>
-    </div>
-  </div>
-</section>
-
 <!-- ======================= ABLAUF ======================= -->
 <section class="pad" style="background:var(--white)" id="ablauf">
   <div class="container">
@@ -649,7 +750,7 @@ footer a:hover{color:var(--gold-light)}
     </div>
     <div class="steps" id="steps">
       <div class="rail"><i></i></div>
-      <div class="step reveal"><div class="n">1</div><h3>Anfrage</h3><p>Sie schreiben uns per E-Mail, WhatsApp oder Telefon – mit Datum, Location und Gästezahl.</p></div>
+      <div class="step reveal"><div class="n">1</div><h3>Anfrage</h3><p>Kurz schreiben – per E-Mail, WhatsApp oder über unseren Chat. Auch wenn noch nichts feststeht.</p></div>
       <div class="step reveal d1"><div class="n">2</div><h3>Beratung</h3><p>Wir besprechen Farben, Stil und Wünsche – passend zu Ihrer Kultur und Ihrem Budget.</p></div>
       <div class="step reveal d2"><div class="n">3</div><h3>Aufbau</h3><p>Am großen Tag bauen wir alles auf. Sie müssen sich um nichts kümmern.</p></div>
       <div class="step reveal d3"><div class="n">4</div><h3>Genießen</h3><p>Sie feiern – wir kümmern uns danach um den Abbau.</p></div>
@@ -666,25 +767,34 @@ footer a:hover{color:var(--gold-light)}
       <p>Jede Hochzeit hat ihre eigenen Bräuche, Farben und Rituale. Wir kennen sie – und setzen sie mit Liebe zum Detail um.</p>
     </div>
     <div class="culture-grid">
-      <div class="culture reveal"><span class="k">Ezidisch</span><h3>Jesidische Hochzeiten</h3><p>Festliche Säle für große Familien – mit viel Licht, Blumen und Platz für die Tanzfläche.</p></div>
+      <div class="culture reveal"><span class="k">Jesidisch</span><h3>Jesidische Hochzeiten</h3><p>Festliche Säle für große Familien – mit viel Licht, Blumen und Platz für die Tanzfläche.</p></div>
       <div class="culture reveal d1"><span class="k">Arabisch</span><h3>Irakische & syrische Hochzeiten</h3><p>Prachtvolle Kosha, glanzvolle Bühnen und edle Gold-Akzente für einen königlichen Auftritt.</p></div>
       <div class="culture reveal d2"><span class="k">Kurdisch</span><h3>Kurdische Hochzeiten</h3><p>Farbenfrohe Deko, die zu langen Festen, Govend und vielen Gästen passt.</p></div>
       <div class="culture reveal"><span class="k">Vorabend</span><h3>Henna-Abend</h3><p>Warme Rot- und Goldtöne, Laternen und ein besonderer Platz für die Braut.</p></div>
-      <div class="culture reveal d1"><span class="k">Standesamt</span><h3>Deutsche Hochzeiten</h3><p>Klassisch, elegant und natürlich – von Greenery bis Ivory & Gold.</p></div>
+      <div class="culture reveal d1"><span class="k">Klassisch</span><h3>Deutsche Hochzeiten</h3><p>Elegant und natürlich – von Greenery bis Ivory & Gold.</p></div>
       <div class="culture reveal d2"><span class="k">Ihr Wunsch</span><h3>Gemischte Hochzeiten</h3><p>Zwei Familien, zwei Traditionen – wir verbinden beides zu einem Stil.</p></div>
     </div>
   </div>
 </section>
 
 <!-- ======================= GALERIE ======================= -->
-<section class="pad" id="galerie">
+<section class="pad gallery" id="galerie">
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow">Galerie</span>
       <h2>Einblicke in unsere Arbeit</h2>
-      <p>Dekorationen, Hochzeitstauben und besondere Momente. Klicken Sie auf ein Bild für die Großansicht.</p>
+      <p>Wischen, ziehen oder Pfeile nutzen – ein Klick auf das mittlere Bild öffnet die Großansicht.</p>
     </div>
-    <div class="gallery-grid" id="gallery"></div>
+  </div>
+  <div class="cf reveal" id="cf" tabindex="0" aria-label="Foto-Karussell"></div>
+  <div class="container">
+    <div class="cf-nav">
+      <button class="cf-btn" id="cfPrev" aria-label="Vorheriges Bild">‹</button>
+      <div class="cf-count" id="cfCount"></div>
+      <button class="cf-btn" id="cfNext" aria-label="Nächstes Bild">›</button>
+    </div>
+    <div class="cf-bar"><i id="cfBar"></i></div>
+    <div class="cf-thumbs" id="cfThumbs"></div>
   </div>
 </section>
 
@@ -696,12 +806,7 @@ footer a:hover{color:var(--gold-light)}
       <h2>Vier Leute. Eine Leidenschaft.</h2>
       <p>2025 in Mönchengladbach gegründet – seitdem haben wir über 100 Hochzeiten dekoriert. Wir sind ein kleines Team, das jede Hochzeit wie die eigene behandelt.</p>
     </div>
-    <div class="team-grid">
-      <div class="member reveal"><div class="ph">J</div><h3>Joki</h3><div class="role">Gründer</div><p>Plant jede Hochzeit persönlich und kümmert sich um die Hochzeitstauben.</p></div>
-      <div class="member reveal d1"><div class="ph">2</div><h3>[Name]</h3><div class="role">Deko-Design</div><p>Entwirft Farbkonzepte und Blumenarrangements.</p></div>
-      <div class="member reveal d2"><div class="ph">3</div><h3>[Name]</h3><div class="role">Aufbau & Logistik</div><p>Sorgt dafür, dass alles pünktlich und perfekt steht.</p></div>
-      <div class="member reveal d3"><div class="ph">4</div><h3>[Name]</h3><div class="role">Licht & Details</div><p>Bringt mit Licht und Kerzen die richtige Stimmung.</p></div>
-    </div>
+    <div class="team-grid" id="teamGrid"></div>
     <p class="team-note reveal">„Jede Hochzeit ist einzigartig – genau wie ihre Deko.“</p>
   </div>
 </section>
@@ -714,10 +819,10 @@ footer a:hover{color:var(--gold-light)}
       <h2>Gut zu wissen</h2>
     </div>
     <div class="faq-list">
-      <div class="qa reveal"><button>Wie früh sollten wir buchen?<span>+</span></button><div class="a"><p>Je früher, desto besser – vor allem in der Hochzeitssaison von Mai bis September. Schreiben Sie uns einfach Ihr Datum, dann sagen wir Ihnen schnell, ob es noch frei ist.</p></div></div>
+      <div class="qa reveal"><button>Wie früh sollten wir buchen?<span>+</span></button><div class="a"><p>Je früher, desto besser – vor allem in der Hochzeitssaison von Mai bis September. Schreiben Sie uns einfach Ihr Datum, dann sagen wir Ihnen, ob es noch frei ist.</p></div></div>
       <div class="qa reveal"><button>Was kostet die Dekoration?<span>+</span></button><div class="a"><p>Dekoration gibt es ab 150 €, standesamtliche Deko ab 115 €. Der genaue Preis hängt von Gästezahl, Location und Ihren Wünschen ab – Sie bekommen ein individuelles Angebot.</p></div></div>
       <div class="qa reveal"><button>Wie funktioniert das mit den Hochzeitstauben?<span>+</span></button><div class="a"><p>Unsere weißen Tauben sind trainiert und fliegen nach dem Auflassen aus bis zu 600 km Entfernung sicher nach Hause. Ideal für den Moment nach der Trauung und für Fotos.</p></div></div>
-      <div class="qa reveal"><button>Kommt ihr auch außerhalb von Mönchengladbach?<span>+</span></button><div class="a"><p>Ja, wir sind in ganz NRW unterwegs. Nennen Sie uns Ihre Location in der Anfrage.</p></div></div>
+      <div class="qa reveal"><button>Wir wissen noch gar nicht, was wir wollen. Ist das ein Problem?<span>+</span></button><div class="a"><p>Überhaupt nicht – dafür gibt es die Anfrage „Noch unentschlossen“. Sie nennen uns nur Name, Anlass und grob den Zeitraum, den Rest klären wir gemeinsam.</p></div></div>
       <div class="qa reveal"><button>Dekoriert ihr auch Henna-Abende und Verlobungen?<span>+</span></button><div class="a"><p>Ja – ob Henna, Verlobung, Standesamt oder Heiratsantrag: Wir gestalten jeden besonderen Anlass.</p></div></div>
     </div>
   </div>
@@ -729,20 +834,48 @@ footer a:hover{color:var(--gold-light)}
     <div class="section-head reveal">
       <span class="eyebrow" style="color:var(--gold-light)">Kontakt</span>
       <h2>Erzählen Sie uns von Ihrem Tag</h2>
-      <p>Füllen Sie die Felder aus. Mit einem Klick öffnet sich Ihr E-Mail-Programm – Betreff und Text sind schon fertig vorbereitet.</p>
+      <p>Ein paar Klicks genügen. Danach öffnet sich Ihr E-Mail-Programm, Betreff und Text sind schon fertig vorbereitet.</p>
     </div>
     <div class="contact-wrap">
       <form class="form reveal" id="form" onsubmit="return false">
-        <div class="form-grid">
-          <div class="field"><label for="f-name">Ihr Name *</label><input id="f-name" placeholder="z. B. Nareen & Shiyar" required></div>
-          <div class="field"><label for="f-phone">Telefon</label><input id="f-phone" type="tel" placeholder="Für Rückfragen"></div>
-          <div class="field"><label for="f-occ">Anlass</label><select id="f-occ"><option>Hochzeit</option><option>Henna-Abend</option><option>Verlobung</option><option>Standesamt</option><option>Heiratsantrag</option><option>Sonstiges</option></select></div>
-          <div class="field"><label for="f-date">Datum</label><input id="f-date" type="date"></div>
+        <div class="modes" role="tablist">
+          <button type="button" class="mode on" data-mode="offen" role="tab"><b>Noch unentschlossen</b><small>Unverbindlich beraten lassen</small></button>
+          <button type="button" class="mode" data-mode="klar" role="tab"><b>Ich weiß, was ich will</b><small>Direkt ein Angebot anfragen</small></button>
+        </div>
+
+        <!-- Variante 1: unentschlossen -->
+        <div class="form-grid" id="grid-offen">
+          <div class="field"><label for="o-name">Ihr Name *</label><input id="o-name" placeholder="z. B. Nareen & Shiyar"></div>
+          <div class="field"><label for="o-occ">Anlass</label><select id="o-occ"><option>Hochzeit</option><option>Henna-Abend</option><option>Verlobung</option><option>Standesamt</option><option>Heiratsantrag</option><option>Weiß ich noch nicht</option></select></div>
+          <div class="field full"><span class="lab">Wann ungefähr?</span>
+            <div class="checks" id="o-when">
+              <label><input type="radio" name="when" value="noch offen" checked>Noch offen</label>
+              <label><input type="radio" name="when" value="in den nächsten 3 Monaten">In 3 Monaten</label>
+              <label><input type="radio" name="when" value="in 3–6 Monaten">3–6 Monate</label>
+              <label><input type="radio" name="when" value="in 6–12 Monaten">6–12 Monate</label>
+              <label><input type="radio" name="when" value="in über einem Jahr">Später</label>
+            </div>
+          </div>
+          <div class="field full"><span class="lab">Wie dürfen wir uns melden?</span>
+            <div class="checks" id="o-how">
+              <label><input type="radio" name="how" value="per E-Mail" checked>E-Mail</label>
+              <label><input type="radio" name="how" value="per WhatsApp">WhatsApp</label>
+              <label><input type="radio" name="how" value="per Anruf">Anruf</label>
+            </div>
+          </div>
+          <div class="field full"><label for="o-msg">Ihre Idee (optional)</label><textarea id="o-msg" placeholder="Ein, zwei Sätze reichen – oder einfach leer lassen."></textarea></div>
+        </div>
+
+        <!-- Variante 2: klar -->
+        <div class="form-grid" id="grid-klar" hidden>
+          <div class="field"><label for="k-name">Ihr Name *</label><input id="k-name" placeholder="z. B. Nareen & Shiyar"></div>
+          <div class="field"><label for="k-occ">Anlass</label><select id="k-occ"><option>Hochzeit</option><option>Henna-Abend</option><option>Verlobung</option><option>Standesamt</option><option>Heiratsantrag</option><option>Sonstiges</option></select></div>
+          <div class="field"><label for="k-date">Datum</label><input id="k-date" type="date"></div>
+          <div class="field"><label for="k-guests">Gäste (ca.)</label><input id="k-guests" type="number" min="1" placeholder="z. B. 300"></div>
           <div class="countdown" id="countdown"></div>
-          <div class="field"><label for="f-loc">Location / Ort</label><input id="f-loc" placeholder="z. B. Festsaal in Mönchengladbach"></div>
-          <div class="field"><label for="f-guests">Gäste (ca.)</label><input id="f-guests" type="number" min="1" placeholder="z. B. 300"></div>
-          <div class="field full"><label>Was wünschen Sie sich?</label>
-            <div class="checks" id="f-services">
+          <div class="field full"><label for="k-loc">Location / Ort</label><input id="k-loc" placeholder="z. B. Festsaal in Mönchengladbach"></div>
+          <div class="field full"><span class="lab">Was wünschen Sie sich?</span>
+            <div class="checks" id="k-services">
               <label><input type="checkbox" value="Dekoration">Dekoration</label>
               <label><input type="checkbox" value="Hochzeitstauben">Hochzeitstauben</label>
               <label><input type="checkbox" value="Standesamt-Deko">Standesamt</label>
@@ -751,23 +884,24 @@ footer a:hover{color:var(--gold-light)}
               <label><input type="checkbox" value="Lichter & Kerzen">Lichter & Kerzen</label>
             </div>
           </div>
-          <div class="field full"><label for="f-msg">Ihre Wünsche</label><textarea id="f-msg" placeholder="Farben, Stil, besondere Ideen …"></textarea></div>
+          <div class="field full"><label for="k-msg">Ihre Wünsche</label><textarea id="k-msg" placeholder="Farben, Stil, besondere Ideen …"></textarea></div>
         </div>
+
         <div class="form-actions">
           <button class="btn btn-gold" id="sendMail" type="button">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
             E-Mail schreiben
           </button>
-          <button class="btn btn-ghost" id="sendWa" type="button">Per WhatsApp senden</button>
+          <button class="btn btn-ghost" id="sendWa" type="button">Per WhatsApp</button>
           <button class="btn btn-ghost" id="copyText" type="button">Text kopieren</button>
-          <small>Kein Formular-Server, keine Daten bei uns: Ihre Nachricht geht direkt aus Ihrem eigenen E-Mail-Programm oder WhatsApp raus.</small>
+          <small>Kein Formular-Server: Ihre Nachricht geht direkt aus Ihrem eigenen E-Mail-Programm oder WhatsApp raus.</small>
         </div>
       </form>
       <div class="info reveal d1">
         <a class="info-card" href="tel:+4921612708150"><div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></div><div><small>Telefon</small><b>02161 2708150</b></div></a>
         <a class="info-card" href="mailto:jokisdeko@gmail.com"><div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></div><div><small>E-Mail</small><b>jokisdeko@gmail.com</b></div></a>
-        <div class="info-card"><div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></div><div><small>Standort</small><b>Mönchengladbach & ganz NRW</b></div></div>
-        <div class="info-card"><div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><small>Erreichbar</small><b>Mo–So · Antwort meist am selben Tag</b></div></div>
+        <div class="info-card"><div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></div><div><small>Standort</small><b>Mönchengladbach & Umgebung</b></div></div>
+        <div class="ai-card">Lieber erst kurz fragen? <button type="button" id="openChatFromContact">Unser Chat-Assistent</button> beantwortet die häufigsten Fragen sofort.</div>
         <div class="socials">
           <a href="https://www.instagram.com/jokisdeko.official/" target="_blank" rel="noopener">Instagram</a>
           <a href="https://www.tiktok.com/@jokis_deko._official" target="_blank" rel="noopener">TikTok</a>
@@ -790,495 +924,500 @@ footer a:hover{color:var(--gold-light)}
       <div><h4>Kontakt</h4><ul><li><a href="tel:+4921612708150">02161 2708150</a></li><li><a href="mailto:jokisdeko@gmail.com">jokisdeko@gmail.com</a></li><li>Mönchengladbach</li></ul></div>
       <div><h4>Rechtliches</h4><ul><li><a href="#">Impressum</a></li><li><a href="#">Datenschutz</a></li></ul></div>
     </div>
-    <div class="trust"><span>✦ 100+ Hochzeiten</span><span>✦ 50.000+ Gäste</span><span>✦ Team aus 4 Leuten</span><span>✦ Mönchengladbach & NRW</span></div>
-    <div class="foot-bottom"><span>© 2026 Jokis Hochzeitstauben & Dekoration MG. Alle Rechte vorbehalten.</span><button class="replay" id="replayIntro">Intro noch einmal ansehen</button></div>
+    <div class="trust"><span>✦ 100+ Hochzeiten</span><span>✦ 50.000+ Gäste</span><span>✦ Team aus 4 Leuten</span><span>✦ Mönchengladbach</span></div>
+    <div class="foot-bottom"><span>© 2026 Jokis Hochzeitstauben & Dekoration MG. Alle Rechte vorbehalten.</span></div>
   </div>
 </footer>
 
-<a class="wa-float" href="https://wa.me/4921612708150" target="_blank" rel="noopener" aria-label="WhatsApp schreiben">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 .8a4 4 0 0 1-1.8-1.8l.8-1-1-2L9 9.5z"/></svg>
-</a>
+<!-- ======================= KI-CHAT ======================= -->
+<div class="chat-teaser" id="chatTeaser">Fragen zu Preisen oder Terminen? Ich antworte sofort ✨</div>
+<button class="chat-launch" id="chatLaunch" aria-label="Chat öffnen">
+  <span class="ai">KI</span>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01" stroke-width="2.6" stroke-linecap="round"/></svg>
+</button>
+<div class="chat" id="chat" role="dialog" aria-label="Chat mit Jokis Assistent">
+  <div class="chat-head">
+    <div class="av"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 6c-2 0-3.5 1-4.5 2.5C15 6 12 4 8 4c1 1.5 1.5 3 1.5 4.5C6 8 3 9 2 12c2-.5 4 0 5.5 1C6 15 5.5 17 6 19c1.5-2 4-3 6.5-3 3 0 5.5-2 6.5-5 .5-1.5 1-2.5 2-3-.5 0-1 0 0-2z"/></svg></div>
+    <div><b>Jokis Assistent</b><small>KI · antwortet sofort</small></div>
+    <div class="x">
+      <a href="https://wa.me/4921612708150" target="_blank" rel="noopener" title="Lieber WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/></svg></a>
+      <button id="chatClose" aria-label="Chat schließen"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+  </div>
+  <div class="chat-body" id="chatBody"></div>
+  <div class="quick" id="chatQuick"></div>
+  <form class="chat-input" id="chatForm">
+    <input id="chatInput" placeholder="Ihre Frage …" autocomplete="off">
+    <button aria-label="Senden"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l16-8-6 16-2-7z"/></svg></button>
+  </form>
+  <div class="chat-foot" id="chatFoot"></div>
+</div>
 
 <div class="lightbox" id="lightbox">
   <button class="lb-btn lb-close" id="lbClose" aria-label="Schließen">✕</button>
   <button class="lb-btn lb-prev" id="lbPrev" aria-label="Zurück">‹</button>
   <img id="lbImg" alt="">
   <button class="lb-btn lb-next" id="lbNext" aria-label="Weiter">›</button>
-  <div class="lb-count" id="lbCount"></div>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
 /* ==========================================================
-   EINSTELLUNGEN – hier Kontaktdaten zentral ändern
+   EINSTELLUNGEN – hier zentral ändern
    ========================================================== */
 const CONFIG = {
   email: "jokisdeko@gmail.com",
   whatsapp: "4921612708150",
-  img: "https://jokis-hochzeitsdeko-mg.netlify.app/images/"
+  img: "https://jokis-hochzeitsdeko-mg.netlify.app/images/",
+  // KI-Chat: URL deines Agents eintragen (z. B. n8n-Webhook oder eigener Server, der ChatGPT aufruft).
+  // Erwartet POST {sessionId, message, history} und antwortet mit JSON {reply} oder {output} oder Klartext.
+  // Leer lassen = Demo-Modus mit vordefinierten Antworten.
+  chatEndpoint: "",
+  // Vergleich "Standard vs. Jokis": echtes Foto (rechts) und dasselbe Foto mit schlechter Deko (links).
+  vsAfter:  "https://jokis-hochzeitsdeko-mg.netlify.app/images/WhatsApp%20Image%202026-05-15%20at%2023.35.19.jpeg",
+  vsBefore: ""   // Pfad zum Bild mit Standard-Deko, z. B. "bilder/saal-standard.jpg" – leer = Vorschau mit Filter
 };
 
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
+const lerp = (a,b,k) => a + (b-a)*k;
 const ease = t => 1 - Math.pow(1 - t, 3);
 const easeIO = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2;
+function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove("show"), 3200); }
 
 /* ==========================================================
-   INTRO – leere graue 3D-Halle, Menschen bauen auf,
-   eine Frau bringt Farbe und Licht
+   TAUBE fliegen lassen (Intro + Deko-Planer)
+   ========================================================== */
+const DOVE = `<svg viewBox="0 0 56 40"><path class="wing" d="M26 20 C20 6 10 2 2 4 C10 8 16 14 22 21Z" fill="#fff"/><path d="M10 24 C18 18 30 16 40 18 C46 12 52 12 55 14 C50 16 48 20 46 22 C40 28 26 30 14 28 L4 32 C6 28 8 26 10 24Z" fill="#fff"/><path class="wing wing2" d="M28 20 C30 6 38 0 48 0 C42 6 36 14 32 21Z" fill="#f3ece0"/><circle cx="49" cy="16" r="1" fill="#3f1620"/></svg>`;
+function releaseDove(x,y){
+  const d = document.createElement("div"); d.className = "dove"; d.innerHTML = DOVE; document.body.appendChild(d);
+  const dir = Math.random() < .5 ? 1 : -1, vx = (3 + Math.random()*3)*dir, start = performance.now();
+  let px = x - 27, py = y - 20;
+  (function fly(now){
+    const k = (now - start)/1000;
+    px += vx; py -= 2.2 + k*2.4;
+    d.style.transform = `translate(${px}px,${py + Math.sin(k*8)*6}px) scaleX(${dir}) rotate(-10deg)`;
+    d.style.opacity = clamp(1.3 - k/2.2, 0, 1);
+    if (k < 3 && py > -80) requestAnimationFrame(fly); else d.remove();
+  })(start);
+}
+
+/* ==========================================================
+   INTRO
+   Luftbild einer grauen Halle → Tische & Stühle werden gestellt →
+   Kamera fliegt hinein → Deko wird aufgebaut → Gäste kommen →
+   Brautpaar läuft ein → Farbe & Licht → Titel + Scroll-Pfeil
    ========================================================== */
 (function(){
-  const intro = $("#intro"), cv = $("#introCanvas"), ctx = cv.getContext("2d");
+  const sec = $("#intro"), cv = $("#introCanvas"), ctx = cv.getContext("2d");
   const caption = $("#introCaption"), title = $("#introTitle");
-  let W, H, DPR, f, raf, t0, finished = false;
+  const skipBtn = $("#skipIntro"), replayBtn = $("#replayIntro"), sd = $("#scrollDown"), sdTxt = $("#scrollTxt");
+  let W, H, DPR, Fa, Fi, F, raf = null, visible = true, tS = 0, rt = 0;
+  const NEAR = .25;
 
   function resize(){
     DPR = Math.min(devicePixelRatio || 1, 2);
-    W = innerWidth; H = innerHeight;
-    cv.width = W*DPR; cv.height = H*DPR;
-    ctx.setTransform(DPR,0,0,DPR,0,0);
-    f = Math.min(W, H*1.6) * 0.62;
+    const box = sec.querySelector(".intro-sticky"); W = box.clientWidth; H = box.clientHeight;
+    cv.width = W*DPR; cv.height = H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0);
+    Fa = Math.min(W*.55, H*.9);
+    Fi = Math.max(Fa, Math.min(W*.62, H*1.05), H*.7);
   }
   resize(); addEventListener("resize", resize);
 
-  // --- Farben ---
-  const hex = h => [parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
-  const gray = c => { const [r,g,b] = hex(c); const l = Math.round(.3*r+.59*g+.11*b); return [l,l,l]; };
-  const mix = (c, k, a=1) => { const A = gray(c), B = hex(c);
-    return `rgba(${Math.round(A[0]+(B[0]-A[0])*k)},${Math.round(A[1]+(B[1]-A[1])*k)},${Math.round(A[2]+(B[2]-A[2])*k)},${a})`; };
-  const mix2 = (g, c, k, a=1) => { const A = hex(g), B = hex(c);
-    return `rgba(${Math.round(A[0]+(B[0]-A[0])*k)},${Math.round(A[1]+(B[1]-A[1])*k)},${Math.round(A[2]+(B[2]-A[2])*k)},${a})`; };
+  // ---------- Farben ----------
+  const hexc = {}; const hex = h => hexc[h] || (hexc[h] = [parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)]);
+  const toGray = h => { const [r,g,b] = hex(h); const l = Math.round(.3*r+.59*g+.11*b); return [l,l,l]; };
+  const mixC = (A,B,k,a=1) => `rgba(${Math.round(A[0]+(B[0]-A[0])*k)},${Math.round(A[1]+(B[1]-A[1])*k)},${Math.round(A[2]+(B[2]-A[2])*k)},${a})`;
+  const col = (c, k, a=1) => mixC(toGray(c), hex(c), k, a);          // grau → Farbe
+  const col2 = (g, c, k, a=1) => mixC(hex(g), hex(c), k, a);         // bestimmtes Grau → Farbe
 
-  // --- Kamera & Projektion ---
-  let camZ = -9, camX = 0;
-  const camY = 2.4, HORIZON = () => H*0.40;
-  function P(x,y,z){
-    const dz = z - camZ; if (dz < .3) return null;
-    const s = f/dz;
-    return { x: W/2 + (x-camX)*s, y: HORIZON() + (camY - y)*s, s };
+  // ---------- Kamera ----------
+  const cam = {x:0,y:30,z:-12,p:.92}; let cp = 1, sp = 0;
+  const KEYS = [
+    {t:0,    x:0,   y:30,  z:-12, p:.92},
+    {t:3.3,  x:2.5, y:27,  z:-10, p:.9},
+    {t:5.9,  x:0,   y:2.35,z:-4,  p:.1},
+    {t:9.4,  x:0,   y:2.3, z:-2,  p:.1},
+    {t:14.2, x:0,   y:2.25,z:-.4, p:.09}
+  ];
+  function updateCam(t){
+    // (Kamera folgt der Scroll-Position)
+    let a = KEYS[KEYS.length-1], b = a, k = 0;
+    for (let i=0;i<KEYS.length-1;i++){ if (t >= KEYS[i].t && t < KEYS[i+1].t){ a = KEYS[i]; b = KEYS[i+1]; k = easeIO((t-a.t)/(b.t-a.t)); break; } }
+    if (t < 0) { a = b = KEYS[0]; }
+    cam.x = lerp(a.x,b.x,k); cam.y = lerp(a.y,b.y,k); cam.z = lerp(a.z,b.z,k); cam.p = lerp(a.p,b.p,k);
+    const amb = clamp((t - T.TITLE)/.3, 0, 1);
+    if (amb > 0){ cam.x += Math.sin(rt*.25)*.5*amb; cam.y += Math.sin(rt*.4)*.05*amb; }
+    cp = Math.cos(cam.p); sp = Math.sin(cam.p);
+    F = lerp(Fa, Fi, easeIO(clamp((t-3.3)/2.6,0,1)));
   }
-  function poly(pts, fill, stroke){
-    const p = pts.map(q => P(...q)); if (p.some(v=>!v)) return;
-    ctx.beginPath(); p.forEach((q,i)=> i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)); ctx.closePath();
+  function toCam(x,y,z){ const dx=x-cam.x, dy=y-cam.y, dz=z-cam.z; return [dx, dy*cp + dz*sp, -dy*sp + dz*cp]; }
+  function proj(c){ const s = F/c[2]; return {x: W/2 + c[0]*s, y: H/2 - c[1]*s, s}; }
+  function P(x,y,z){ const c = toCam(x,y,z); return c[2] < NEAR ? null : proj(c); }
+  function depth(x,y,z){ return toCam(x,y,z)[2]; }
+  function clipPoly(cs){
+    const out = [];
+    for (let i=0;i<cs.length;i++){ const a = cs[i], b = cs[(i+1)%cs.length]; const ai = a[2] >= NEAR, bi = b[2] >= NEAR;
+      if (ai) out.push(a);
+      if (ai !== bi){ const k = (NEAR - a[2])/(b[2]-a[2]); out.push([a[0]+(b[0]-a[0])*k, a[1]+(b[1]-a[1])*k, NEAR]); } }
+    return out;
+  }
+  function poly(pts, fill, stroke, lw=1){
+    const cs = clipPoly(pts.map(p => toCam(p[0],p[1],p[2]))); if (cs.length < 3) return;
+    ctx.beginPath(); cs.forEach((c,i)=>{ const q = proj(c); i ? ctx.lineTo(q.x,q.y) : ctx.moveTo(q.x,q.y); }); ctx.closePath();
     if (fill){ ctx.fillStyle = fill; ctx.fill(); }
-    if (stroke){ ctx.strokeStyle = stroke; ctx.lineWidth = 1; ctx.stroke(); }
+    if (stroke){ ctx.strokeStyle = stroke; ctx.lineWidth = lw; ctx.stroke(); }
   }
-
-  // --- Halle ---
-  const HX = 11, HZ = 34, HH = 7.5;
-
-  // --- Objekte ---
-  const items = [];
-  const FL_COLORS = ["#6e2a3a","#ffffff","#dcc286","#c7a65d","#f3e6e8"];
-  // runde Tische
-  [8,13,18,23].forEach(z => [-7.6,-4.4,4.4,7.6].forEach(x => items.push({type:"table",x,z})));
-  // Blumenständer am Gang
-  [5,9,13,17,21,25].forEach(z => [-1.7,1.7].forEach(x => items.push({type:"stand",x,z})));
-  // Bogen & Bühne
-  items.push({type:"stage",x:0,z:30});
-  items.push({type:"arch",x:0,z:28.5});
-  // Kronleuchter
-  [10,18,26].forEach(z => [-5,0,5].forEach(x => items.push({type:"chand",x,z})));
-  // Teppich
-  items.push({type:"carpet",x:0,z:3});
-
-  // Bau-Reihenfolge: von hinten nach vorne, gemischt
-  const BUILD_START = .9, BUILD_END = 5.2;
-  const order = items.slice().sort((a,b)=> (b.z - a.z) + (Math.sin(a.x*7+a.z)*3));
-  order.forEach((it,i)=>{ it.bt = BUILD_START + (BUILD_END-BUILD_START) * (i/(order.length-1)); it.seed = Math.random(); });
-
-  // Arbeiter – laufen schnell zwischen Tür und Objekten
-  const workers = [];
-  const NW = 9;
-  for (let w=0; w<NW; w++){
-    const kf = [];
-    const door = {x: (w%2? -9.5 : 9.5), z: 31 - (w%3)*2};
-    kf.push({t:0, x:door.x, z:door.z});
-    order.filter((_,i)=> i % NW === w).forEach(it=>{
-      const ox = it.type==="chand" ? it.x+.6 : it.x + (it.x>0? -1.1 : 1.1);
-      kf.push({t: it.bt - .05, x: ox, z: it.z - .9});
-      kf.push({t: it.bt + .22, x: ox, z: it.z - .9});
-    });
-    const last = kf[kf.length-1];
-    kf.push({t: last.t + .9, x: (w%2? -12 : 12), z: last.z});
-    workers.push({kf, shade: 150 + (w*13)%60, trail: []});
+  function line3(a, b, stroke, lw=1){
+    let A = toCam(...a), B = toCam(...b);
+    if (A[2] < NEAR && B[2] < NEAR) return;
+    if (A[2] < NEAR){ const k = (NEAR-A[2])/(B[2]-A[2]); A = [A[0]+(B[0]-A[0])*k, A[1]+(B[1]-A[1])*k, NEAR]; }
+    if (B[2] < NEAR){ const k = (NEAR-B[2])/(A[2]-B[2]); B = [B[0]+(A[0]-B[0])*k, B[1]+(A[1]-B[1])*k, NEAR]; }
+    const p = proj(A), q = proj(B);
+    ctx.strokeStyle = stroke; ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.stroke();
   }
-  function workerPos(wk, t){
-    const kf = wk.kf;
-    if (t <= kf[0].t) return {x:kf[0].x, z:kf[0].z, moving:false};
-    for (let i=0; i<kf.length-1; i++){
-      const a = kf[i], b = kf[i+1];
-      if (t >= a.t && t <= b.t){
-        const k = (t-a.t)/(b.t-a.t || 1);
-        return {x: a.x+(b.x-a.x)*k, z: a.z+(b.z-a.z)*k, moving: Math.hypot(b.x-a.x,b.z-a.z) > .1};
-      }
+  function dot(x,y,z,r,fill){ const p = P(x,y,z); if (!p) return null; ctx.fillStyle = fill; ctx.beginPath(); ctx.arc(p.x,p.y,Math.max(.6,r*p.s),0,Math.PI*2); ctx.fill(); return p; }
+
+  // ---------- Halle ----------
+  const HX = 11, Z0 = -6, Z1 = 34, HH = 7.5;
+  const T = { BUILD_A0:.3, BUILD_A1:3.0, DECO0:6.1, DECO1:8.9, GUESTS:8.5, COUPLE0:9.3, COUPLE1:11.4, RAISE:11.6, WAVE:11.9, WAVE_DUR:2.4, TITLE:14.1, END:14.6 };
+  const COUPLE_Z = 12.5;
+  const rand = (()=>{ let s = 7; return () => (s = (s*16807) % 2147483647) / 2147483647; })();
+
+  const tables = [], chairs = [], deco = [], guests = [];
+  const FL = ["#6e2a3a","#ffffff","#dcc286","#c7a65d","#f3e6e8","#a8475c"];
+  [8,13,18,23].forEach(z => [-7.6,-4.4,4.4,7.6].forEach(x => tables.push({type:"table",x,z,seed:rand()})));
+  // Tische: ein Teil steht schon, der Rest kommt im Luftbild dazu
+  const preset = tables.filter((_,i)=> i%2===0), toBuild = tables.filter((_,i)=> i%2===1);
+  preset.forEach(t=> t.bt = -1);
+  toBuild.sort((a,b)=>b.z-a.z).forEach((t,i)=> t.bt = T.BUILD_A0 + (T.BUILD_A1-T.BUILD_A0)*(i/(toBuild.length-1)));
+  tables.forEach(t=>{ for (let i=0;i<8;i++){ const a = i/8*Math.PI*2 + Math.PI/8; chairs.push({type:"chair", tb:t, a, x:t.x+Math.cos(a)*1.35, z:t.z+Math.sin(a)*1.35, bt: t.bt < 0 ? (i<5 ? -1 : T.BUILD_A0 + 1.2 + rand()*1.6) : t.bt + .15 + i*.05}); } });
+
+  // Deko (innen)
+  [7,11,15,19,23,27].forEach(z => [-1.8,1.8].forEach(x => deco.push({type:"stand",x,z,seed:rand()})));
+  deco.push({type:"stage",x:0,z:30}); deco.push({type:"arch",x:0,z:28.6});
+  [10,18,26].forEach(z => [-5.5,0,5.5].forEach(x => deco.push({type:"chand",x,z})));
+  deco.push({type:"carpet",x:0,z:Z0});
+  const decoOrder = deco.slice().sort((a,b)=> (b.z-a.z) + (a.type==="carpet"?-100:0));
+  decoOrder.forEach((d,i)=> d.bt = T.DECO0 + (T.DECO1-T.DECO0)*(i/(decoOrder.length-1)));
+  const carpet = deco.find(d=>d.type==="carpet"); carpet.bt = T.DECO0;
+
+  // Arbeiter
+  function makeWorkers(list, n, doors, exitX, startT){
+    const ws = [];
+    for (let w=0; w<n; w++){
+      const mine = list.filter((_,i)=> i % n === w).sort((a,b)=>a.bt-b.bt);
+      if (!mine.length) continue;
+      const d = doors[w % doors.length], kf = [{t:Math.max(startT, mine[0].bt - 1.1), x:d.x, z:d.z}];
+      mine.forEach(it=>{ const ox = it.x + (it.x>0? -1.1 : 1.1); kf.push({t:it.bt - .06, x:ox, z:it.z - .9}); kf.push({t:it.bt + .18, x:ox, z:it.z - .9}); });
+      const last = kf[kf.length-1]; kf.push({t:last.t + 1.0, x:(w%2? -exitX : exitX), z:last.z});
+      ws.push({kf, shade: 140 + (w*17)%70, ph: rand()*6});
     }
+    return ws;
+  }
+  const workersA = makeWorkers(toBuild.concat(chairs.filter(c=>c.bt>0 && c.tb.bt<0)), 7, [{x:-2,z:Z0+.5},{x:2,z:Z0+.5},{x:0,z:Z0+.5}], 13, 0);
+  const workersC = makeWorkers(deco.filter(d=>d.type!=="carpet"), 7, [{x:-10,z:31},{x:10,z:31},{x:-10,z:20},{x:10,z:20}], 13, 5.6);
+  function workerPos(wk,t){
+    const kf = wk.kf; if (t < kf[0].t || t > kf[kf.length-1].t) return null;
+    for (let i=0;i<kf.length-1;i++){ const a = kf[i], b = kf[i+1];
+      if (t >= a.t && t <= b.t){ const k = (t-a.t)/((b.t-a.t)||1); return {x:lerp(a.x,b.x,k), z:lerp(a.z,b.z,k), moving: Math.hypot(b.x-a.x,b.z-a.z) > .1}; } }
     return null;
   }
 
-  // Frau
-  const WOMAN = {start:5.4, walkEnd:7.1, raise:7.3, x:0, z0:-2, z1:12};
-  const WAVE_START = 7.5, WAVE_DUR = 2.4, TITLE_AT = 9.4, AUTO_END = 13.5;
-  const sparks = [];
+  // Gäste – stehen hinter den Stühlen
+  const DRESS = ["#6e2a3a","#c7a65d","#1f3a7a","#1f5c4f","#d9a5a8","#7a3e8a","#a8475c","#e6d6ab"];
+  const SUIT = ["#1e1b1a","#2b2b3a","#3f1620","#3a3a3a"];
+  tables.forEach(tb=>{ [1,3,5,6].forEach(j=>{ if (rand() < .2) return; const a = j/8*Math.PI*2; const dress = rand() < .55;
+    guests.push({x: tb.x + Math.cos(a)*2.0, z: tb.z + Math.sin(a)*2.0, dress, c: dress ? DRESS[Math.floor(rand()*DRESS.length)] : SUIT[Math.floor(rand()*SUIT.length)], h: dress ? 1.62+rand()*.12 : 1.74+rand()*.12, appear: T.GUESTS + rand()*1.6, ph: rand()*6}); }); });
 
-  function waveR(t){ return t < WAVE_START ? -1 : 42 * easeIO(clamp((t-WAVE_START)/WAVE_DUR,0,1)); }
-  function colorK(x,z,t){
-    const r = waveR(t); if (r < 0) return 0;
-    const d = Math.hypot(x-WOMAN.x, z-WOMAN.z1);
-    return clamp((r - d)/4, 0, 1);
-  }
-  function buildK(it,t){ return clamp((t - it.bt)/.35, 0, 1); }
+  // ---------- Hilfen ----------
+  const waveR = t => t < T.WAVE ? -1 : 44 * easeIO(clamp((t-T.WAVE)/T.WAVE_DUR,0,1));
+  const colorK = (x,z,t) => { const r = waveR(t); if (r < 0) return 0; return clamp((r - Math.hypot(x, z-COUPLE_Z))/4, 0, 1); };
+  const buildK = (it,t) => it.bt < 0 ? 1 : clamp((t - it.bt)/.35, 0, 1);
+  let glows = [];
+  const glow = (p, r, a) => { if (p) glows.push({x:p.x, y:p.y, r:Math.max(2,r*p.s), a}); };
 
-  // --- Zeichnen einzelner Objekte ---
+  // ---------- Objekte zeichnen ----------
+  function ring(cx,cy,cz,r,n=16){ return Array.from({length:n},(_,i)=>{ const a=i/n*Math.PI*2; return [cx+Math.cos(a)*r, cy, cz+Math.sin(a)*r]; }); }
   function drawTable(it,t){
     const b = ease(buildK(it,t)); if (b<=0) return;
-    const k = colorK(it.x,it.z,t);
-    const p = P(it.x,.78,it.z), q = P(it.x,0,it.z); if(!p||!q) return;
-    const rx = .95*p.s*b, ry = rx*.32;
-    // Tischdecke (Rock)
-    ctx.fillStyle = mix2("#6a6a6a","#efe6d6",k);
-    ctx.beginPath(); ctx.ellipse(p.x, p.y, rx, ry, 0, 0, Math.PI); ctx.lineTo(q.x - rx, q.y); ctx.ellipse(q.x, q.y, rx, ry, 0, Math.PI, 0, true); ctx.closePath(); ctx.fill();
-    // Schärpe
-    if (k>0){ ctx.strokeStyle = mix("#6e2a3a",k,k); ctx.lineWidth = Math.max(1,.08*p.s); ctx.beginPath(); ctx.ellipse(p.x,p.y+ry*.6,rx*.98,ry,0,.15,Math.PI-.15); ctx.stroke(); }
-    // Tischplatte
-    ctx.fillStyle = mix2("#8c8c8c","#fbf6ec",k);
-    ctx.beginPath(); ctx.ellipse(p.x, p.y, rx, ry, 0, 0, Math.PI*2); ctx.fill();
-    // Stühle (Andeutung)
-    ctx.fillStyle = mix2("#575757","#c7a65d",k);
-    for (let i=0;i<6;i++){ const a = Math.PI + i*Math.PI/5; const cx = p.x + Math.cos(a)*rx*1.25, cy = p.y + Math.sin(a)*ry*1.25 - .1*p.s;
-      if (Math.sin(a) < -.1) ctx.fillRect(cx - .07*p.s*b, cy - .35*p.s*b, .14*p.s*b, .45*p.s*b); }
+    const k = colorK(it.x,it.z,t), R = .95*b, N = 16;
+    const top = ring(it.x,.78,it.z,R,N), bot = ring(it.x,0,it.z,R*1.03,N), sash = ring(it.x,.6,it.z,R*1.01,N);
+    const sides = [];
+    for (let i=0;i<N;i++){ const j=(i+1)%N; const mid = [(top[i][0]+top[j][0])/2, .4, (top[i][2]+top[j][2])/2]; sides.push({i,j,d:depth(...mid)}); }
+    sides.sort((a,b)=>b.d-a.d).forEach(s=>{
+      poly([top[s.i],top[s.j],bot[s.j],bot[s.i]], col2("#646464","#ece2d0",k));
+      if (k>0) line3(sash[s.i], sash[s.j], col("#6e2a3a",k,k), 2);
+    });
+    poly(top, col2("#878787","#fbf6ec",k));
     // Gesteck
-    const c = P(it.x, 1.15 + .5*b, it.z); if(!c) return;
-    ctx.strokeStyle = mix2("#9a9a9a","#c7a65d",k); ctx.lineWidth = Math.max(1,.04*p.s);
-    ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(c.x,c.y); ctx.stroke();
-    for (let i=0;i<7;i++){
-      const a = i/7*Math.PI*2 + it.seed*6, r = .22*c.s*b;
-      ctx.fillStyle = mix(FL_COLORS[(i+Math.floor(it.seed*5))%5], k, 1);
-      if (k<.01) ctx.fillStyle = `rgb(${165+i*8},${165+i*8},${165+i*8})`;
-      ctx.beginPath(); ctx.arc(c.x+Math.cos(a)*r*.8, c.y+Math.sin(a)*r*.5, r*.55, 0, Math.PI*2); ctx.fill();
-    }
-    // Kerzenlicht
-    if (k > .3){ glowQueue.push({x:p.x, y:p.y - .1*p.s, r:.9*p.s, a:.35*k}); }
+    const h = .78 + .9*b;
+    line3([it.x,.78,it.z],[it.x,h,it.z], col2("#999999","#c7a65d",k), 1.5);
+    for (let i=0;i<7;i++){ const a = i/7*Math.PI*2 + it.seed*6;
+      dot(it.x+Math.cos(a)*.17, h+.05+Math.sin(i*1.7)*.06, it.z+Math.sin(a)*.17, .12, k<.01 ? `rgb(${160+i*9},${160+i*9},${160+i*9})` : col(FL[(i+Math.floor(it.seed*6))%6],k)); }
+    if (k>.3){ glow(P(it.x,.85,it.z), .9, .32*k); }
+  }
+  function drawChair(c,t){
+    const b = ease(buildK(c,t)); if (b<=0) return;
+    const k = colorK(c.x,c.z,t), ca = Math.cos(c.a), sa = Math.sin(c.a), tx = -sa, tz = ca, w = .2*b, y = .46;
+    const p = (r,s,yy) => [c.x + ca*r + tx*s, yy, c.z + sa*r + tz*s];
+    poly([p(-w,-w,y),p(-w,w,y),p(w,w,y),p(w,-w,y)], col2("#727272","#f8f3ea",k));
+    poly([p(w,-w,y),p(w,w,y),p(w,w,y+.55*b),p(w,-w,y+.55*b)], col2("#5f5f5f","#c7a65d",k));
+    if (k>.5){ dot(c.x+ca*(w+.01), y+.3, c.z+sa*(w+.01), .05, col("#6e2a3a",k)); }
   }
   function drawStand(it,t){
     const b = ease(buildK(it,t)); if (b<=0) return;
-    const k = colorK(it.x,it.z,t);
-    const top = 1.6*b;
-    const a = P(it.x,0,it.z), c = P(it.x,top,it.z); if(!a||!c) return;
-    ctx.strokeStyle = mix2("#8a8a8a","#c7a65d",k); ctx.lineWidth = Math.max(1,.06*a.s);
-    ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(c.x,c.y); ctx.stroke();
-    for (let i=0;i<9;i++){
-      const ang = i/9*Math.PI*2 + it.seed*4, r = .3*c.s*b;
-      ctx.fillStyle = k<.01 ? `rgb(${150+i*10},${150+i*10},${150+i*10})` : mix(FL_COLORS[i%3===0?0:(i%3===1?1:4)], k);
-      ctx.beginPath(); ctx.arc(c.x+Math.cos(ang)*r*.7, c.y+Math.sin(ang)*r*.45 - r*.2, r*.5, 0, Math.PI*2); ctx.fill();
-    }
+    const k = colorK(it.x,it.z,t), top = 1.7*b;
+    line3([it.x,0,it.z],[it.x,top,it.z], col2("#8a8a8a","#c7a65d",k), 2);
+    for (let i=0;i<10;i++){ const a = i/10*Math.PI*2 + it.seed*4;
+      dot(it.x+Math.cos(a)*.24*b, top+.12+Math.sin(i*2.1)*.1, it.z+Math.sin(a)*.24*b, .13, k<.01 ? `rgb(${150+i*10},${150+i*10},${150+i*10})` : col([ "#6e2a3a","#ffffff","#f3e6e8","#dcc286"][i%4],k)); }
   }
   function drawArch(it,t){
     const b = ease(buildK(it,t)); if (b<=0) return;
-    const k = colorK(it.x,it.z,t);
-    const R = 2.6, base = 0;
-    ctx.strokeStyle = mix2("#9a9a9a","#c7a65d",k); ctx.lineWidth = Math.max(2,.12*(P(0,0,it.z)||{s:10}).s);
-    ctx.beginPath();
-    const N = 40, maxA = Math.PI*b;
-    let first = true;
-    // linker Pfosten, Bogen, rechter Pfosten
-    const pts = [];
-    pts.push([-R, base, it.z]); pts.push([-R, 3.2, it.z]);
-    for (let i=0;i<=N;i++){ const a = Math.PI - (i/N)*Math.PI; pts.push([Math.cos(a)*R, 3.2 + Math.sin(a)*R*.85, it.z]); }
-    pts.push([R, 3.2, it.z]); pts.push([R, base, it.z]);
-    const upto = Math.floor(pts.length * b);
-    for (let i=0;i<upto;i++){ const q = P(...pts[i]); if(!q) continue; first ? ctx.moveTo(q.x,q.y) : ctx.lineTo(q.x,q.y); first=false; }
-    ctx.stroke();
-    // Blumen am Bogen
-    for (let i=0;i<upto;i+=2){
-      const q = P(...pts[i]); if(!q) continue;
-      ctx.fillStyle = k<.01 ? `rgb(${170+(i%4)*15},${170+(i%4)*15},${170+(i%4)*15})` : mix(FL_COLORS[i%5],k);
-      ctx.beginPath(); ctx.arc(q.x + Math.sin(i)*3, q.y + Math.cos(i)*3, .17*q.s, 0, Math.PI*2); ctx.fill();
-    }
-    if (k>.5){ const q = P(0,3.6,it.z); if(q) glowQueue.push({x:q.x,y:q.y,r:3.4*q.s,a:.25*k}); }
+    const k = colorK(it.x,it.z,t), R = 2.6, pts = [];
+    for (let y=0;y<=3.2;y+=.4) pts.push([-R, y, it.z]);
+    for (let i=0;i<=24;i++){ const a = Math.PI - (i/24)*Math.PI; pts.push([Math.cos(a)*R, 3.2 + Math.sin(a)*R*.85, it.z]); }
+    for (let y=3.2;y>=0;y-=.4) pts.push([R, y, it.z]);
+    const upto = Math.floor(pts.length*b);
+    for (let i=0;i<upto-1;i++) line3(pts[i],pts[i+1], col2("#9a9a9a","#c7a65d",k), 3);
+    for (let i=0;i<upto;i++){ const q = pts[i]; dot(q[0]+Math.sin(i)*.12, q[1]+Math.cos(i*1.3)*.12, q[2]-.05, .2, k<.01 ? `rgb(${165+(i%4)*15},${165+(i%4)*15},${165+(i%4)*15})` : col(FL[i%6],k)); }
+    if (k>.5) glow(P(0,3.8,it.z), 3.6, .25*k);
   }
   function drawStage(it,t){
     const b = ease(buildK(it,t)); if (b<=0) return;
-    const k = colorK(it.x,it.z,t);
-    poly([[-4.5,0,it.z],[4.5,0,it.z],[4.5,.6*b,it.z],[-4.5,.6*b,it.z]], mix2("#4a4a4a","#6e2a3a",k));
-    poly([[-4.5,.6*b,it.z],[4.5,.6*b,it.z],[4.5,.6*b,it.z+2],[-4.5,.6*b,it.z+2]], mix2("#5d5d5d","#3f1620",k));
-    // Sofa des Brautpaars
-    if (b>.6){
-      poly([[-1.4,.6,it.z+.8],[1.4,.6,it.z+.8],[1.4,1.6,it.z+.8],[-1.4,1.6,it.z+.8]], mix2("#9a9a9a","#fbf6ec",k));
-      poly([[-1.6,1.1,it.z+.9],[1.6,1.1,it.z+.9],[1.4,2.3,it.z+.9],[-1.4,2.3,it.z+.9]], mix2("#808080","#c7a65d",k));
+    const k = colorK(it.x,it.z,t), h = .6*b;
+    poly([[-4.6,h,it.z],[4.6,h,it.z],[4.6,h,it.z+2.4],[-4.6,h,it.z+2.4]], col2("#5c5c5c","#3f1620",k));
+    poly([[-4.6,0,it.z],[4.6,0,it.z],[4.6,h,it.z],[-4.6,h,it.z]], col2("#4a4a4a","#6e2a3a",k));
+    if (b>.7){
+      poly([[-1.6,1.15,it.z+1.1],[1.6,1.15,it.z+1.1],[1.4,2.4,it.z+1.1],[-1.4,2.4,it.z+1.1]], col2("#848484","#c7a65d",k));
+      poly([[-1.4,.6,it.z+.8],[1.4,.6,it.z+.8],[1.4,1.2,it.z+.8],[-1.4,1.2,it.z+.8]], col2("#9c9c9c","#fbf6ec",k));
     }
   }
   function drawChand(it,t){
     const b = ease(buildK(it,t)); if (b<=0) return;
-    const k = colorK(it.x,it.z,t);
-    const y = HH - 1.6*b;
-    const a = P(it.x,HH,it.z), c = P(it.x,y,it.z); if(!a||!c) return;
-    ctx.strokeStyle = mix2("#777777","#c7a65d",k); ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(c.x,c.y); ctx.stroke();
-    const rx = .75*c.s, ry = rx*.3;
-    ctx.lineWidth = Math.max(1,.05*c.s);
-    ctx.beginPath(); ctx.ellipse(c.x,c.y,rx,ry,0,0,Math.PI*2); ctx.stroke();
-    for (let i=0;i<8;i++){ const an = i/8*Math.PI*2; const bx = c.x+Math.cos(an)*rx, by = c.y+Math.sin(an)*ry;
-      ctx.fillStyle = k>0 ? mix2("#bbbbbb","#ffe2a0",k) : "#9a9a9a";
-      ctx.beginPath(); ctx.arc(bx, by - .08*c.s, Math.max(1,.06*c.s), 0, Math.PI*2); ctx.fill(); }
-    // Kristalle
-    for (let i=0;i<6;i++){ ctx.strokeStyle = mix2("#888888","#f5e6c0",k); ctx.beginPath(); ctx.moveTo(c.x - rx*.6 + i*rx*.24, c.y); ctx.lineTo(c.x - rx*.6 + i*rx*.24, c.y + (.3+.25*Math.sin(i*2))*c.s); ctx.stroke(); }
-    if (k>0) glowQueue.push({x:c.x, y:c.y, r:2.6*c.s, a:.55*k});
+    const k = colorK(it.x,it.z,t), y = HH - 1.6*b;
+    line3([it.x,HH,it.z],[it.x,y,it.z], col2("#777777","#c7a65d",k), 1);
+    const r = ring(it.x,y,it.z,.75,14);
+    for (let i=0;i<r.length;i++) line3(r[i], r[(i+1)%r.length], col2("#888888","#c7a65d",k), 1.6);
+    r.forEach((q,i)=>{ if (i%2) return; dot(q[0],q[1]+.08,q[2],.06, k>0 ? col2("#bbbbbb","#ffe2a0",k) : "#9a9a9a"); line3(q,[q[0],q[1]-.35,q[2]], col2("#888888","#f5e6c0",k), 1); });
+    if (k>0) glow(P(it.x,y,it.z), 2.8, .55*k);
   }
-  function drawCarpet(it,t){
-    const b = ease(buildK(it,t)); if (b<=0) return;
-    const k = colorK(0,14,t);
-    const zEnd = 3 + 25*b;
-    poly([[-1,0.01,-6],[1,0.01,-6],[1,0.01,zEnd],[-1,0.01,zEnd]], mix2("#4c4c4c","#7a1f2e",k));
-    // goldene Kante
-    if (k>0){ poly([[-1.08,0.01,-6],[-1,0.01,-6],[-1,0.01,zEnd],[-1.08,0.01,zEnd]], mix("#c7a65d",k,k)); poly([[1,0.01,-6],[1.08,0.01,-6],[1.08,0.01,zEnd],[1,0.01,zEnd]], mix("#c7a65d",k,k)); }
+  function drawCarpet(t){
+    const b = ease(buildK(carpet,t)); if (b<=0) return;
+    const k = colorK(0,COUPLE_Z,t), zEnd = Z0 + (28.6-Z0)*b;
+    poly([[-1,.01,Z0],[1,.01,Z0],[1,.01,zEnd],[-1,.01,zEnd]], col2("#4a4a4a","#7a1f2e",k));
+    if (k>0){ poly([[-1.08,.012,Z0],[-1,.012,Z0],[-1,.012,zEnd],[-1.08,.012,zEnd]], col("#c7a65d",k,k)); poly([[1,.012,Z0],[1.08,.012,Z0],[1.08,.012,zEnd],[1,.012,zEnd]], col("#c7a65d",k,k)); }
   }
 
-  function person(x,z,t,shade,moving,phase,isWoman,arms){
-    const p = P(x,0,z), h = P(x,isWoman?1.75:1.8,z); if(!p||!h) return;
-    const s = p.s, H_ = p.y - h.y;
-    const sw = moving ? Math.sin(t*28 + phase)*.35 : 0;
+  // Figuren
+  function figure(x,z,o,t){
+    const b = P(x,0,z), tp = P(x,o.h,z); if (!b || !tp) return;
+    const Hs = b.y - tp.y, u = b.s; if (Math.abs(Hs) < 2) return;
+    const bx = b.x, by = b.y, k = o.k || 0, a = o.alpha ?? 1;
+    const c = o.color, base = o.gray || toGray(c);
+    const fill = mixC(base, hex(c), k, a);
+    const sw = o.walk ? Math.sin(t*o.speed + o.ph)*.3 : 0;
+    const sh = by - Hs*.8, hip = by - Hs*.48, hy = by - Hs*.92;
     ctx.lineCap = "round";
-    if (isWoman){
-      // Kleid
-      const glow = ctx.createRadialGradient(h.x, h.y + H_*.5, 0, h.x, h.y+H_*.5, H_*1.3);
-      glow.addColorStop(0, "rgba(255,240,200,.35)"); glow.addColorStop(1,"rgba(255,240,200,0)");
-      ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(h.x, h.y+H_*.5, H_*1.3, 0, Math.PI*2); ctx.fill();
-      ctx.fillStyle = "#fbf6ec";
-      ctx.beginPath();
-      ctx.moveTo(h.x - .12*s, h.y + H_*.22);
-      ctx.lineTo(h.x + .12*s, h.y + H_*.22);
-      ctx.lineTo(p.x + (.55 + sw*.1)*s, p.y);
-      ctx.quadraticCurveTo(p.x, p.y + .1*s, p.x - (.55 - sw*.1)*s, p.y);
-      ctx.closePath(); ctx.fill();
-      // Schleier
-      ctx.fillStyle = "rgba(255,255,255,.35)";
-      ctx.beginPath(); ctx.moveTo(h.x, h.y + H_*.05); ctx.quadraticCurveTo(h.x + .5*s, h.y + H_*.5, h.x + .35*s, p.y - H_*.15); ctx.lineTo(h.x + .1*s, h.y+H_*.3); ctx.fill();
-      // Arme
-      ctx.strokeStyle = "#fbf6ec"; ctx.lineWidth = Math.max(1.5,.07*s);
-      const sh = h.y + H_*.27, ar = arms;
-      [-1,1].forEach(d=>{
-        ctx.beginPath(); ctx.moveTo(h.x + d*.1*s, sh);
-        const ex = h.x + d*(.32 + .25*ar)*s, ey = sh + (1-ar)*H_*.32 - ar*H_*.35;
-        ctx.lineTo(ex, ey); ctx.stroke();
-        if (ar > .9) glowQueue.push({x:ex,y:ey,r:.6*s,a:.6});
-      });
-      // Kopf
-      ctx.fillStyle = "#fbf6ec"; ctx.beginPath(); ctx.arc(h.x, h.y + H_*.08, .12*s, 0, Math.PI*2); ctx.fill();
-      return;
+    if (o.glow){ const g = ctx.createRadialGradient(bx, by-Hs*.5, 0, bx, by-Hs*.5, Hs*1.3); g.addColorStop(0,`rgba(255,240,200,${.35*a})`); g.addColorStop(1,"rgba(255,240,200,0)"); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(bx, by-Hs*.5, Hs*1.3, 0, Math.PI*2); ctx.fill(); }
+    ctx.fillStyle = fill; ctx.strokeStyle = fill;
+    if (o.dress){
+      ctx.beginPath(); ctx.moveTo(bx - .13*u, sh); ctx.lineTo(bx + .13*u, sh);
+      ctx.lineTo(bx + (.36 + (o.wide||0) + sw*.06)*u, by); ctx.quadraticCurveTo(bx, by + .06*u, bx - (.36 + (o.wide||0) - sw*.06)*u, by); ctx.closePath(); ctx.fill();
+    } else {
+      ctx.lineWidth = Math.max(1.2, .1*u);
+      ctx.beginPath(); ctx.moveTo(bx + sw*.35*u - .05*u, by); ctx.lineTo(bx - .05*u, hip); ctx.moveTo(bx - sw*.35*u + .05*u, by); ctx.lineTo(bx + .05*u, hip); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(bx - .17*u, sh); ctx.lineTo(bx + .17*u, sh); ctx.lineTo(bx + .13*u, hip); ctx.lineTo(bx - .13*u, hip); ctx.closePath(); ctx.fill();
     }
-    const col = `rgb(${shade},${shade},${shade})`;
-    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = Math.max(1.2,.08*s);
-    const hip = p.y - H_*.48, sh = p.y - H_*.8;
-    ctx.beginPath(); ctx.moveTo(p.x + sw*.4*s, p.y); ctx.lineTo(p.x, hip); ctx.lineTo(p.x - sw*.4*s, p.y); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(p.x, hip); ctx.lineTo(p.x, sh); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(p.x - sw*.35*s, sh + H_*.32); ctx.lineTo(p.x, sh); ctx.lineTo(p.x + sw*.35*s + (moving?0:.25*s), sh + H_*.25 - (moving?0:H_*.15)); ctx.stroke();
-    // Kiste in der Hand, wenn unterwegs
-    if (moving){ ctx.fillRect(p.x + .05*s, sh + H_*.12, .26*s, .2*s); }
-    ctx.beginPath(); ctx.arc(p.x, sh - .14*s, .11*s, 0, Math.PI*2); ctx.fill();
+    // Arme
+    ctx.lineWidth = Math.max(1, .06*u); ctx.strokeStyle = fill;
+    const up = o.armsUp || 0, clap = o.clap ? Math.sin(t*14 + o.ph) : null;
+    [-1,1].forEach(d=>{
+      if (o.holdSide === d) return;
+      let ex, ey;
+      if (clap !== null){ ex = bx + d*(.05 + .07*(clap*.5+.5))*u; ey = sh + Hs*.12 - Hs*.1*(1-Math.abs(clap)); }
+      else { ex = bx + d*(.22 + .14*up)*u + (o.carry ? .15*u : 0); ey = lerp(hip + Hs*.04, sh - Hs*.32, up) - (o.carry ? Hs*.15 : 0); }
+      ctx.beginPath(); ctx.moveTo(bx + d*.15*u, sh + Hs*.02); ctx.lineTo(ex, ey); ctx.stroke();
+      if (up > .9 && o.sparkHands) glow({x:ex,y:ey,s:u}, .5, .6);
+    });
+    if (o.carry){ ctx.fillStyle = mixC(base,base,0,a); ctx.fillRect(bx + .08*u, sh + Hs*.08, .28*u, .2*u); }
+    // Kopf
+    ctx.fillStyle = o.skin ? mixC([190,190,190], hex(o.skin), k, a) : fill;
+    ctx.beginPath(); ctx.arc(bx, hy, .11*u, 0, Math.PI*2); ctx.fill();
+    if (o.hair){ ctx.fillStyle = mixC([70,70,70], hex(o.hair), k, a); ctx.beginPath(); ctx.arc(bx, hy - .03*u, .115*u, Math.PI, 0); ctx.fill(); }
+    if (o.veil){ ctx.fillStyle = `rgba(255,255,255,${.35*a})`; ctx.beginPath(); ctx.moveTo(bx, hy - .1*u); ctx.quadraticCurveTo(bx - .45*u, hy + Hs*.3, bx - .3*u, by - Hs*.05); ctx.lineTo(bx - .05*u, hy + Hs*.15); ctx.closePath(); ctx.fill(); }
+    if (o.flower && k>0){ ctx.fillStyle = col("#c7a65d",k,a); ctx.beginPath(); ctx.arc(bx - .1*u, sh + Hs*.06, .035*u, 0, Math.PI*2); ctx.fill(); }
   }
 
-  let glowQueue = [];
-
+  // Konfetti / Funken
+  const sparks = [], confetti = [];
   function frame(now){
-    if (!t0) t0 = now;
-    const t = (now - t0)/1000;
-    glowQueue = [];
-    const gk = clamp(waveR(t)/30, 0, 1); // globale Farbintensität
+    rt = now/1000;
+    const target = targetT();
+    tS += (target - tS) * (Math.abs(target - tS) > 4 ? .22 : .1);
+    if (Math.abs(target - tS) < .002) tS = target;
+    const t = tS;
+    if (t < T.WAVE){ confetti.length = 0; }
+    updateCam(t); glows = [];
+    const gk = clamp(waveR(t)/30, 0, 1);
 
-    camZ = -9 + 5.5*easeIO(clamp(t/10,0,1));
-    camX = Math.sin(t*.25)*.6;
+    ctx.fillStyle = col2("#141414","#1a080c",gk); ctx.fillRect(0,0,W,H);
 
-    // Hintergrund
-    ctx.fillStyle = mix2("#141414","#1a080c",gk); ctx.fillRect(0,0,W,H);
+    // Boden, Wände, Decke
+    poly([[-HX,0,Z0],[HX,0,Z0],[HX,0,Z1],[-HX,0,Z1]], col2("#2c2c2c","#2a1416",gk));
+    ctx.lineWidth = 1;
+    const gridC = col2("#3b3b3b","#4e2e2a",gk,.7);
+    for (let x=-HX; x<=HX; x+=2) line3([x,0,Z0],[x,0,Z1], gridC);
+    for (let z=Z0; z<=Z1; z+=2) line3([-HX,0,z],[HX,0,z], gridC);
+    poly([[-HX,0,Z1],[HX,0,Z1],[HX,HH,Z1],[-HX,HH,Z1]], col2("#3a3a3a","#4a1c27",gk));
+    poly([[-HX,0,Z0],[-HX,0,Z1],[-HX,HH,Z1],[-HX,HH,Z0]], col2("#323232","#3f1620",gk));
+    poly([[HX,0,Z0],[HX,0,Z1],[HX,HH,Z1],[HX,HH,Z0]], col2("#323232","#3f1620",gk));
+    // Wandkanten (Puppenhaus-Look von oben)
+    const edge = col2("#555555","#6e2a3a",gk);
+    line3([-HX,HH,Z0],[-HX,HH,Z1],edge,2); line3([HX,HH,Z0],[HX,HH,Z1],edge,2); line3([-HX,HH,Z1],[HX,HH,Z1],edge,2);
+    // Decke erst, wenn wir drin sind
+    const ceilA = clamp((HH + 2 - cam.y)/3, 0, 1);
+    if (ceilA > 0) poly([[-HX,HH,Z0],[HX,HH,Z0],[HX,HH,Z1],[-HX,HH,Z1]], col2("#232323","#2a0e15",gk,ceilA));
+    // Säulen
+    for (let z=0; z<Z1; z+=6) [-HX+.05, HX-.35].forEach(x=> poly([[x,0,z],[x+.3,0,z],[x+.3,HH,z],[x,HH,z]], col2("#3e3e3e","#5a2a35",gk)));
+    // Lichterketten an den Wänden
+    if (t > T.DECO1 - .4) for (let z=-4; z<Z1; z+=1.1) [-HX+.05, HX-.05].forEach(x=>{
+      const y = HH - .9 - Math.abs(Math.sin(z*.55))*.6, k = colorK(x,z,t);
+      const p = dot(x,y,z,.05, k>0 ? col2("#666666","#ffdc8a",k) : "#585858");
+      if (p && k>.2) glow(p, .5, .35*k);
+    });
 
-    // Halle: Boden, Wände, Decke
-    poly([[-HX,0,-8],[HX,0,-8],[HX,0,HZ],[-HX,0,HZ]], mix2("#2b2b2b","#2a1416",gk));
-    poly([[-HX,0,HZ],[HX,0,HZ],[HX,HH,HZ],[-HX,HH,HZ]], mix2("#3a3a3a","#4a1c27",gk));
-    poly([[-HX,0,-8],[-HX,0,HZ],[-HX,HH,HZ],[-HX,HH,-8]], mix2("#303030","#3f1620",gk));
-    poly([[HX,0,-8],[HX,0,HZ],[HX,HH,HZ],[HX,HH,-8]], mix2("#303030","#3f1620",gk));
-    poly([[-HX,HH,-8],[HX,HH,-8],[HX,HH,HZ],[-HX,HH,HZ]], mix2("#242424","#2a0e15",gk));
-    // Bodenraster
-    ctx.strokeStyle = gk>0 ? mix2("#3a3a3a","#5a3a2a",gk,.6) : "rgba(70,70,70,.6)"; ctx.lineWidth = 1;
-    for (let x=-HX; x<=HX; x+=2){ const a=P(x,0,-2), b=P(x,0,HZ); if(a&&b){ ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); } }
-    for (let z=0; z<=HZ; z+=2){ const a=P(-HX,0,z), b=P(HX,0,z); if(a&&b){ ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); } }
-    // Säulen an den Wänden
-    for (let z=4; z<HZ; z+=6){ [-HX+.3, HX-.6].forEach(x=>poly([[x,0,z],[x+.3,0,z],[x+.3,HH,z],[x,HH,z]], mix2("#3d3d3d","#5a2a35",gk))); }
-    // Lichterketten an den Wänden (nach der Welle)
-    for (let z=-4; z<HZ; z+=1.2){ [-HX+.05, HX-.05].forEach(x=>{
-      const y = HH - .8 - Math.abs(Math.sin(z*.6))*.6; const q = P(x,y,z); if(!q) return;
-      const k = colorK(x,z,t);
-      ctx.fillStyle = k>0 ? mix2("#666666","#ffdc8a",k) : "#555";
-      ctx.beginPath(); ctx.arc(q.x,q.y,Math.max(1,.05*q.s),0,Math.PI*2); ctx.fill();
-      if (k>.2) glowQueue.push({x:q.x,y:q.y,r:.5*q.s,a:.35*k});
-    }); }
+    drawCarpet(t);
 
-    // Teppich zuerst (liegt am Boden)
-    items.filter(i=>i.type==="carpet").forEach(i=>drawCarpet(i,t));
-
-    // Alles nach Tiefe sortiert zeichnen
-    const draws = [];
-    items.forEach(it=>{ if (it.type!=="carpet") draws.push({z:it.z, fn:()=>({table:drawTable,stand:drawStand,arch:drawArch,stage:drawStage,chand:drawChand})[it.type](it,t)}); });
-    workers.forEach((wk,wi)=>{
-      const pos = workerPos(wk,t); if(!pos) return;
-      const fade = t > WOMAN.start ? clamp(1 - (t-WOMAN.start)/1.2, 0, 1) : 1;
-      if (fade<=0) return;
-      draws.push({z:pos.z, fn:()=>{
-        ctx.globalAlpha = fade;
-        // Bewegungsunschärfe
-        if (pos.moving){ for (let g=1; g<=3; g++){ const pp = workerPos(wk, t - g*.035); if(pp){ ctx.globalAlpha = fade*(.18/g); person(pp.x,pp.z,t,wk.shade,true,wi,false); } } ctx.globalAlpha = fade; }
-        person(pos.x,pos.z,t,wk.shade,pos.moving,wi,false);
-        ctx.globalAlpha = 1;
+    // Alles mit Tiefe sortieren
+    const D = [];
+    tables.forEach(it=> D.push({d:depth(it.x,.5,it.z), fn:()=>drawTable(it,t)}));
+    chairs.forEach(c=> D.push({d:depth(c.x,.5,c.z), fn:()=>drawChair(c,t)}));
+    deco.forEach(it=>{ if (it.type==="carpet") return; const f = {stand:drawStand,arch:drawArch,stage:drawStage,chand:drawChand}[it.type]; D.push({d:depth(it.x, it.type==="chand"?HH-1.6:1, it.z + (it.type==="stage"?1:0)), fn:()=>f(it,t)}); });
+    [...workersA, ...workersC].forEach(wk=>{
+      const pos = workerPos(wk,t); if (!pos) return;
+      D.push({d:depth(pos.x,.9,pos.z), fn:()=>{
+        if (pos.moving) for (let g=1; g<=3; g++){ const pp = workerPos(wk, t - g*.04); if (pp) figure(pp.x,pp.z,{h:1.78,color:"#888888",gray:[wk.shade,wk.shade,wk.shade],walk:true,speed:30,ph:wk.ph,alpha:.16/g,carry:true},t); }
+        figure(pos.x,pos.z,{h:1.78,color:"#888888",gray:[wk.shade,wk.shade,wk.shade],walk:pos.moving,speed:30,ph:wk.ph,carry:pos.moving},t);
       }});
     });
-    if (t > WOMAN.start){
-      const wk = clamp((t - WOMAN.start)/(WOMAN.walkEnd - WOMAN.start), 0, 1);
-      const z = WOMAN.z0 + (WOMAN.z1 - WOMAN.z0)*easeIO(wk);
-      const arms = easeIO(clamp((t - WOMAN.raise)/.5, 0, 1));
-      const appear = clamp((t - WOMAN.start)/.6,0,1);
-      draws.push({z, fn:()=>{ ctx.globalAlpha = appear; person(WOMAN.x,z,t,0,wk<1,0,true,arms); ctx.globalAlpha = 1; }});
-      // Funken aus den Händen
-      if (t > WOMAN.raise + .3 && t < WAVE_START + WAVE_DUR){
-        const hp = P(WOMAN.x, 2.3, WOMAN.z1);
-        if (hp) for (let i=0;i<4;i++) sparks.push({x:hp.x + (Math.random()-.5)*20, y:hp.y, vx:(Math.random()-.5)*9, vy:-Math.random()*7-1, life:1, c: Math.random()<.5 ? "220,194,134" : "255,240,210"});
-      }
+    guests.forEach(g=>{
+      if (t < g.appear) return;
+      const a = clamp((t - g.appear)/.8, 0, 1), k = colorK(g.x,g.z,t);
+      const dancing = t >= T.TITLE - .1 && g.ph > 3;
+      const clapping = t > T.WAVE + .3 && !dancing;
+      const sway = dancing ? Math.sin(rt*2.4 + g.ph)*.08 : 0;
+      D.push({d:depth(g.x,.9,g.z), fn:()=> figure(g.x + sway, g.z, {h:g.h, color:g.c, dress:g.dress, alpha:a, k, clap:clapping, armsUp: dancing ? .5 + .5*Math.sin(rt*3 + g.ph) : 0, ph:g.ph, skin:"#c99a7a", hair: g.dress ? "#2a1a14" : "#1e1410"}, rt)});
+    });
+    // Brautpaar
+    if (t > T.COUPLE0){
+      const wk = clamp((t - T.COUPLE0)/(T.COUPLE1 - T.COUPLE0), 0, 1);
+      let z = lerp(Z0 + 1.6, COUPLE_Z, easeIO(wk)), bxp = -.38, gxp = .38;
+      const dk = clamp((t - T.TITLE + .1)/.3, 0, 1);
+      if (dk > 0){ const a = rt*.7; bxp = lerp(bxp, Math.cos(a+Math.PI)*.38, dk); gxp = lerp(gxp, Math.cos(a)*.38, dk); z = COUPLE_Z + Math.sin(a)*.25*dk; }
+      const up = easeIO(clamp((t - T.RAISE)/.5, 0, 1)) * (1 - dk);
+      const appear = clamp((t - T.COUPLE0)/.5, 0, 1), walking = wk < 1;
+      const k = colorK(0,COUPLE_Z,t);
+      D.push({d:depth(0,.9,z) - .01, fn:()=>{
+        // Hände halten
+        const pb = P(bxp,1.05,z), pg = P(gxp,1.05,z);
+        if (pb && pg && up < .1){ ctx.strokeStyle = `rgba(240,234,224,${appear})`; ctx.lineWidth = Math.max(1,.06*pb.s); ctx.beginPath(); ctx.moveTo(pb.x+.12*pb.s,pb.y); ctx.lineTo(pg.x-.12*pg.s,pg.y); ctx.stroke(); }
+        figure(gxp, z, {h:1.84, color:"#1e1b1a", gray:[38,38,38], k, alpha:appear, walk:walking, speed:9, ph:0, armsUp:up, holdSide: up<.1 ? -1 : 0, skin:"#c99a7a", hair:"#1e1410", flower:true, sparkHands:true}, t);
+        figure(bxp, z, {h:1.7, color:"#fbf6ec", gray:[245,240,232], k:1, alpha:appear, dress:true, wide:.14, walk:walking, speed:9, ph:1, armsUp:up, holdSide: up<.1 ? 1 : 0, veil:true, glow:true, skin:"#d8ab8a", hair:"#2a1a14", sparkHands:true}, t);
+      }});
+      if (up > .8 && t < T.WAVE + T.WAVE_DUR){ const hp = P(0, 2.3, COUPLE_Z); if (hp) for (let i=0;i<4;i++) sparks.push({x:hp.x+(Math.random()-.5)*40, y:hp.y, vx:(Math.random()-.5)*9, vy:-Math.random()*7-1, life:1, c: Math.random()<.5 ? "220,194,134" : "255,240,210"}); }
     }
-    draws.sort((a,b)=>b.z - a.z).forEach(d=>d.fn());
+    D.sort((a,b)=>b.d - a.d).forEach(o=>o.fn());
 
-    // Lichtwelle (Ring am Boden)
+    // Lichtwelle am Boden
     const r = waveR(t);
-    if (r > 0 && r < 40){
-      ctx.strokeStyle = `rgba(220,194,134,${.5*(1 - r/40)})`; ctx.lineWidth = 2;
-      ctx.beginPath();
-      for (let i=0;i<=64;i++){ const a = i/64*Math.PI*2; const q = P(WOMAN.x + Math.cos(a)*r, .02, WOMAN.z1 + Math.sin(a)*r); if(!q) continue; i? ctx.lineTo(q.x,q.y) : ctx.moveTo(q.x,q.y); }
+    if (r > 0 && r < 42){
+      ctx.strokeStyle = `rgba(220,194,134,${.55*(1 - r/42)})`; ctx.lineWidth = 2; ctx.beginPath(); let f = true;
+      for (let i=0;i<=72;i++){ const a = i/72*Math.PI*2; const q = P(Math.cos(a)*r, .02, COUPLE_Z + Math.sin(a)*r); if (!q){ f = true; continue; } f ? ctx.moveTo(q.x,q.y) : ctx.lineTo(q.x,q.y); f = false; }
       ctx.stroke();
     }
 
     // Glows
     ctx.globalCompositeOperation = "lighter";
-    glowQueue.forEach(g=>{
-      const gr = ctx.createRadialGradient(g.x,g.y,0,g.x,g.y,g.r);
-      gr.addColorStop(0,`rgba(255,214,140,${g.a})`); gr.addColorStop(1,"rgba(255,214,140,0)");
-      ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(g.x,g.y,g.r,0,Math.PI*2); ctx.fill();
-    });
+    glows.forEach(g=>{ const gr = ctx.createRadialGradient(g.x,g.y,0,g.x,g.y,g.r); gr.addColorStop(0,`rgba(255,214,140,${g.a})`); gr.addColorStop(1,"rgba(255,214,140,0)"); ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(g.x,g.y,g.r,0,Math.PI*2); ctx.fill(); });
     for (let i=sparks.length-1;i>=0;i--){ const s = sparks[i]; s.x+=s.vx; s.y+=s.vy; s.vy+=.12; s.vx*=.985; s.life-=.016;
-      if (s.life<=0){ sparks.splice(i,1); continue; }
-      ctx.fillStyle = `rgba(${s.c},${s.life})`; ctx.beginPath(); ctx.arc(s.x,s.y,1.8,0,Math.PI*2); ctx.fill(); }
+      if (s.life<=0){ sparks.splice(i,1); continue; } ctx.fillStyle = `rgba(${s.c},${s.life})`; ctx.beginPath(); ctx.arc(s.x,s.y,1.8,0,Math.PI*2); ctx.fill(); }
     ctx.globalCompositeOperation = "source-over";
 
-    // Vignette
+    // Konfetti & Blütenblätter
+    if (t > T.WAVE + .4){ const rate = t < T.TITLE - .3 ? 2 : (Math.random() < .3 ? 1 : 0);
+      for (let i=0;i<rate;i++) confetti.push({x:Math.random()*W, y:-10, vx:(Math.random()-.5)*1.2, vy:1+Math.random()*1.8, r:Math.random()*Math.PI, vr:(Math.random()-.5)*.15, s:3+Math.random()*4, c:["#dcc286","#f8f3ea","#a8475c","#c7a65d","#f3e6e8"][Math.floor(Math.random()*5)]}); }
+    for (let i=confetti.length-1;i>=0;i--){ const c = confetti[i]; c.x += c.vx + Math.sin((rt+c.r)*2)*.4; c.y += c.vy; c.r += c.vr;
+      if (c.y > H+10){ confetti.splice(i,1); continue; }
+      ctx.save(); ctx.translate(c.x,c.y); ctx.rotate(c.r); ctx.fillStyle = c.c; ctx.globalAlpha = .85; ctx.beginPath(); ctx.ellipse(0,0,c.s,c.s*.45,0,0,Math.PI*2); ctx.fill(); ctx.restore(); }
+    ctx.globalAlpha = 1;
+
+    // Vignette & Lesbarkeit
     const vg = ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*.3,W/2,H/2,Math.max(W,H)*.75);
-    vg.addColorStop(0,"rgba(0,0,0,0)"); vg.addColorStop(1,"rgba(0,0,0,.65)");
-    ctx.fillStyle = vg; ctx.fillRect(0,0,W,H);
-    if (t > TITLE_AT - .6){ ctx.fillStyle = `rgba(20,6,10,${.62*clamp((t-TITLE_AT+.6)/1.2,0,1)})`; ctx.fillRect(0,0,W,H); }
+    vg.addColorStop(0,"rgba(0,0,0,0)"); vg.addColorStop(1,"rgba(0,0,0,.6)"); ctx.fillStyle = vg; ctx.fillRect(0,0,W,H);
+    if (t > T.TITLE - .6){ ctx.fillStyle = `rgba(20,6,10,${.55*clamp((t-T.TITLE+.6)/1.2,0,1)})`; ctx.fillRect(0,0,W,H); }
 
-    // Untertitel
-    const cap = t < BUILD_START ? "Ein leerer Saal …" : t < WOMAN.start ? "Unser Team baut auf …" : t < WAVE_START ? "… und dann kommt sie." : "Farbe. Licht. Ihr Moment.";
+    // Texte
+    const cap = t < .9 ? "Ein leerer Saal. Scrollen Sie – wir bauen auf." : t < 3.4 ? "Tische und Stühle kommen rein …" : t < 5.9 ? "… und dann geht's hinein." : t < 8.6 ? "Jetzt wird dekoriert." : t < 11.6 ? "Die Gäste sind da – das Brautpaar kommt." : "Farbe. Licht. Ihr Moment.";
     if (caption.textContent !== cap) caption.textContent = cap;
-    caption.style.opacity = t > TITLE_AT ? 0 : 1;
-    if (t > TITLE_AT) title.classList.add("show");
-    if (t > AUTO_END && !finished) return endIntro();
-    raf = requestAnimationFrame(frame);
+    caption.style.opacity = t > T.TITLE - .3 ? 0 : 1;
+    const done = t >= T.TITLE - .05;
+    title.classList.toggle("show", done);
+    sd.classList.toggle("loud", done);
+    sdTxt.textContent = done ? "Weiter scrollen" : (t < .5 ? "Scrollen – wir bauen auf" : "Weiter scrollen");
+    skipBtn.hidden = done; replayBtn.hidden = !done;
+    chEls.forEach((el,i)=>{ const on = t >= CH[i].t - .01 && (i === CH.length-1 || t < CH[i+1].t - .01); el.classList.toggle("on", on); el.classList.toggle("past", t >= CH[i].t - .01 && !on); });
+    chFill.style.setProperty("--fill", (t/TOTAL*100) + "%");
+
+    raf = visible ? requestAnimationFrame(frame) : null;
   }
 
-  function endIntro(){
-    if (finished) return; finished = true;
-    cancelAnimationFrame(raf);
-    intro.classList.add("done");
-    document.body.classList.remove("locked");
-    setTimeout(()=>window.dispatchEvent(new Event("introdone")), 300);
-  }
-  function startIntro(){
-    finished = false; t0 = null; sparks.length = 0;
-    title.classList.remove("show"); caption.style.opacity = 1;
-    intro.classList.remove("done"); document.body.classList.add("locked");
-    scrollTo(0,0);
-    raf = requestAnimationFrame(frame);
-  }
-  $("#skipIntro").onclick = endIntro;
-  $("#enterSite").onclick = endIntro;
-  addEventListener("keydown", e=>{ if (!finished && (e.key==="Escape"||e.key===" ")) { e.preventDefault(); endIntro(); } });
-  $("#replayIntro").onclick = startIntro;
+  // Scroll-Position → Story-Zeit
+  const TOTAL = T.TITLE + .3, HOLD = .86;   // die letzten 14 % halten den fertigen Saal
+  const range = () => Math.max(1, sec.offsetHeight - innerHeight);
+  function targetT(){ const p = clamp(-sec.getBoundingClientRect().top / range(), 0, 1); return clamp(p/HOLD, 0, 1) * TOTAL; }
+  const yFor = t => sec.offsetTop + (t/TOTAL)*HOLD*range();
+  const CH = [{l:"Leerer Saal",t:0},{l:"Tische & Stühle",t:1},{l:"Hinein",t:3.6},{l:"Deko",t:6.2},{l:"Gäste",t:8.6},{l:"Brautpaar",t:9.6},{l:"Farbe & Licht",t:T.WAVE},{l:"Fertig",t:T.TITLE}];
+  const chNav = $("#chapters"), chFill = chNav.querySelector(".fill");
+  const chEls = CH.map(c=>{ const b = document.createElement("button"); b.className = "ch"; b.innerHTML = `<b></b><span>${c.l}</span>`; b.onclick = () => scrollTo({top: yFor(c.t) + 2, behavior:"smooth"}); chNav.appendChild(b); return b; });
+  skipBtn.onclick = () => scrollTo({top: yFor(TOTAL) + 4, behavior:"smooth"});
+  replayBtn.onclick = () => scrollTo({top: 0, behavior:"smooth"});
+  sd.addEventListener("click", e=>{ if (tS < T.TITLE - .05){ e.preventDefault(); scrollBy({top: innerHeight*.9, behavior:"smooth"}); } });
+  sec.addEventListener("click", e=>{ if (title.classList.contains("show") && !e.target.closest("a,button")) releaseDove(e.clientX, e.clientY); });
 
-  if (reduceMotion){ intro.classList.add("done"); document.body.classList.remove("locked"); finished = true; }
-  else startIntro();
+  // Nur rendern, wenn sichtbar – sonst pausieren
+  new IntersectionObserver(es=>{
+    visible = es[0].isIntersecting;
+    if (visible && !raf) raf = requestAnimationFrame(frame);
+  }, {threshold:0}).observe(sec);
+  tS = targetT();
+  raf = requestAnimationFrame(frame);
 })();
 
 /* ==========================================================
    HEADER, MENÜ, FORTSCHRITT
    ========================================================== */
 const header = $("#header");
-addEventListener("scroll", ()=>{
-  header.classList.toggle("scrolled", scrollY > 60);
+function onScroll(){
+  header.classList.toggle("scrolled", scrollY > $("#intro").offsetHeight - 90);
   const h = document.documentElement;
   $("#progress").style.width = (scrollY/(h.scrollHeight - innerHeight)*100) + "%";
-  // aktiver Menüpunkt
-  let cur = "";
+  let cur = "start";
   $$("section[id]").forEach(s=>{ if (scrollY >= s.offsetTop - 140) cur = s.id; });
+  if (cur === "intro") cur = "start";
   $$("nav a").forEach(a=>a.classList.toggle("active", a.getAttribute("href") === "#"+cur && !a.classList.contains("btn")));
-}, {passive:true});
+}
+addEventListener("scroll", onScroll, {passive:true}); onScroll();
 $("#burger").onclick = () => { $("#menu").classList.toggle("open"); $("#burger").classList.toggle("x"); };
 $$("#menu a").forEach(a=>a.onclick = ()=>{ $("#menu").classList.remove("open"); $("#burger").classList.remove("x"); });
 
-/* Reveal */
 const io = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } }), {threshold:.15});
 $$(".reveal").forEach(el=>io.observe(el));
 
 /* ==========================================================
-   HERO – Goldpartikel, Wellen, Tauben per Klick
-   ========================================================== */
-(function(){
-  const cv = $("#heroCanvas"), ctx = cv.getContext("2d"), hero = $(".hero");
-  let W,H,DPR, mx = .5, my = .5, parts = [];
-  function resize(){ DPR = Math.min(devicePixelRatio||1,2); W = hero.offsetWidth; H = hero.offsetHeight; cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0);
-    parts = Array.from({length: Math.round(W*H/16000)}, ()=>({x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.8+.4, s:Math.random()*.35+.08, o:Math.random()*.6+.2, d:Math.random()*Math.PI*2, petal: Math.random()<.18})); }
-  resize(); addEventListener("resize", resize);
-  hero.addEventListener("mousemove", e=>{ const r = hero.getBoundingClientRect(); mx = (e.clientX - r.left)/r.width; my = (e.clientY - r.top)/r.height; });
-  const w1 = $("#wave1"), w2 = $("#wave2");
-  function loop(t){
-    ctx.clearRect(0,0,W,H);
-    parts.forEach(p=>{
-      p.y -= p.s; p.x += Math.sin(t/2000 + p.d)*.25 + (mx-.5)*.4;
-      if (p.y < -10){ p.y = H + 10; p.x = Math.random()*W; }
-      const px = p.x + (mx-.5)*-30*p.r, py = p.y + (my-.5)*-20*p.r;
-      if (p.petal){
-        ctx.save(); ctx.translate(px,py); ctx.rotate(t/1500 + p.d);
-        ctx.fillStyle = `rgba(243,230,232,${p.o*.55})`; ctx.beginPath(); ctx.ellipse(0,0,p.r*3,p.r*1.6,0,0,Math.PI*2); ctx.fill(); ctx.restore();
-      } else {
-        ctx.fillStyle = `rgba(220,194,134,${p.o})`; ctx.beginPath(); ctx.arc(px,py,p.r,0,Math.PI*2); ctx.fill();
-      }
-    });
-    const a = Math.sin(t/2600)*40, b = Math.cos(t/3100)*40, m = (my-.5)*60;
-    w1.setAttribute("d", `M0,${420+a} C320,${300-b+m} 520,${560+a} 820,${430+m} C1080,${320+b} 1240,${360-a} 1440,${280+b}`);
-    w2.setAttribute("d", `M0,${520-b} C260,${460+a} 600,${640-b+m} 900,${520} C1140,${430-a} 1300,${500+b} 1440,${420-a}`);
-    requestAnimationFrame(loop);
-  }
-  if (!reduceMotion) requestAnimationFrame(loop);
-
-  // Taube fliegen lassen
-  const DOVE = `<svg viewBox="0 0 56 40"><path class="wing" d="M26 20 C20 6 10 2 2 4 C10 8 16 14 22 21Z" fill="#fff"/><path d="M10 24 C18 18 30 16 40 18 C46 12 52 12 55 14 C50 16 48 20 46 22 C40 28 26 30 14 28 L4 32 C6 28 8 26 10 24Z" fill="#fff"/><path class="wing wing2" d="M28 20 C30 6 38 0 48 0 C42 6 36 14 32 21Z" fill="#f3ece0"/><circle cx="49" cy="16" r="1" fill="#3f1620"/></svg>`;
-  hero.addEventListener("click", e=>{
-    if (e.target.closest("a,button")) return;
-    releaseDove(e.clientX, e.clientY);
-  });
-  window.releaseDove = function(x,y){
-    const d = document.createElement("div"); d.className = "dove"; d.innerHTML = DOVE; document.body.appendChild(d);
-    const dir = Math.random() < .5 ? 1 : -1, vx = (3 + Math.random()*3)*dir, start = performance.now();
-    let px = x - 27, py = y - 20;
-    (function fly(now){
-      const k = (now - start)/1000;
-      px += vx; py -= 2.2 + k*2.4;
-      d.style.transform = `translate(${px}px,${py + Math.sin(k*8)*6}px) scaleX(${dir}) rotate(${-10}deg)`;
-      d.style.opacity = clamp(1.3 - k/2.2, 0, 1);
-      if (k < 3 && py > -80) requestAnimationFrame(fly); else d.remove();
-    })(start);
-  };
-})();
-
-/* ==========================================================
-   BEWERTUNGEN – Laufband (Platzhalter!)
+   BEWERTUNGEN (Platzhalter!)
    ========================================================== */
 const REVIEWS = [
   ["Nareen & Shiyar","Jesidische Hochzeit · Mönchengladbach","Der Saal war nicht wiederzuerkennen. Unsere Familie redet heute noch über die Deko!"],
@@ -1292,39 +1431,47 @@ const REVIEWS = [
   ["Sarah & Tim","Antrag · Düsseldorf","Sie hat Ja gesagt! Die Antrags-Deko war wie aus einem Film."],
   ["Dilvin & Hozan","Hochzeit · Essen","Professionell, herzlich und ehrlich. Genau so wünscht man sich das."]
 ];
-function reviewHTML([n,w,txt]){
-  const ini = n.split(" & ").map(s=>s[0]).join("");
-  return `<div class="review"><span class="tag">Beispiel</span><div class="stars">★★★★★</div><p>„${txt}“</p><div class="who"><div class="av">${ini}</div><div><b>${n}</b><small>${w}</small></div></div></div>`;
-}
-const r1 = REVIEWS.slice(0,5).map(reviewHTML).join(""), r2 = REVIEWS.slice(5).map(reviewHTML).join("");
-$("#track1").innerHTML = $("#track1b").innerHTML = r1;
-$("#track2").innerHTML = $("#track2b").innerHTML = r2;
+const reviewHTML = ([n,w,txt]) => `<div class="review"><span class="tag">Beispiel</span><div class="stars">★★★★★</div><p>„${txt}“</p><div class="who"><div class="av">${n.split(" & ").map(s=>s[0]).join("")}</div><div><b>${n}</b><small>${w}</small></div></div></div>`;
+$("#track1").innerHTML = $("#track1b").innerHTML = REVIEWS.slice(0,5).map(reviewHTML).join("");
+$("#track2").innerHTML = $("#track2b").innerHTML = REVIEWS.slice(5).map(reviewHTML).join("");
 
-/* ==========================================================
-   ZAHLEN zählen hoch
-   ========================================================== */
-const fmt = n => n.toLocaleString("de-DE");
+/* ZAHLEN */
 const cio = new IntersectionObserver(es=>es.forEach(e=>{
   if (!e.isIntersecting) return; cio.unobserve(e.target);
   const el = e.target, end = +el.dataset.count, suf = el.dataset.suffix || "", plain = el.dataset.plain;
-  const from = plain ? 2000 : 0, dur = 1800, st = performance.now();
-  (function tick(now){ const k = ease(clamp((now-st)/dur,0,1)); const v = Math.round(from + (end-from)*k);
-    el.textContent = (plain ? v : fmt(v)) + (k===1 ? suf : ""); if (k<1) requestAnimationFrame(tick); })(st);
+  const from = plain ? 2000 : 0, st = performance.now();
+  (function tick(now){ const k = ease(clamp((now-st)/1800,0,1)); const v = Math.round(from + (end-from)*k);
+    el.textContent = (plain ? v : v.toLocaleString("de-DE")) + (k===1 ? suf : ""); if (k<1) requestAnimationFrame(tick); })(st);
 }), {threshold:.5});
 $$("[data-count]").forEach(el=>cio.observe(el));
 
-/* ==========================================================
-   ANGEBOTE – 3D-Neigung & Details
-   ========================================================== */
+/* ANGEBOTE */
 $$(".offer").forEach(card=>{
-  card.addEventListener("mousemove", e=>{
-    if (matchMedia("(hover:none)").matches) return;
+  card.addEventListener("mousemove", e=>{ if (matchMedia("(hover:none)").matches) return;
     const r = card.getBoundingClientRect(), x = (e.clientX - r.left)/r.width - .5, y = (e.clientY - r.top)/r.height - .5;
-    card.style.transform = `rotateY(${x*8}deg) rotateX(${-y*8}deg) translateY(-6px)`;
-  });
+    card.style.transform = `rotateY(${x*8}deg) rotateX(${-y*8}deg) translateY(-6px)`; });
   card.addEventListener("mouseleave", ()=> card.style.transform = "");
   card.querySelector(".more").onclick = () => { card.classList.toggle("open"); card.querySelector(".more span").textContent = card.classList.contains("open") ? "–" : "+"; };
 });
+
+/* ==========================================================
+   STANDARD vs. JOKIS – echte Fotos + Regler
+   ========================================================== */
+(function(){
+  const before = $("#vsBefore"), after = $("#vsAfter");
+  after.src = CONFIG.vsAfter;
+  if (CONFIG.vsBefore){ before.src = CONFIG.vsBefore; $("#vsNote").remove(); }
+  else { before.src = CONFIG.vsAfter; before.classList.add("sim"); }
+  // Regler
+  const c = $("#compare"); let drag = false;
+  const set = x => { const r = c.getBoundingClientRect(); c.style.setProperty("--x", clamp((x - r.left)/r.width*100, 0, 100) + "%"); };
+  c.addEventListener("pointerdown", e=>{ drag = true; c.setPointerCapture(e.pointerId); set(e.clientX); });
+  c.addEventListener("pointermove", e=>{ if (drag) set(e.clientX); });
+  c.addEventListener("pointerup", ()=> drag = false);
+  const o = new IntersectionObserver(es=>{ if (es[0].isIntersecting){ o.disconnect(); const st = performance.now();
+    (function a(now){ const k = (now-st)/2600; if (k>1 || drag) return; c.style.setProperty("--x", (50 + Math.sin(k*Math.PI*2)*30) + "%"); requestAnimationFrame(a); })(st); } }, {threshold:.6});
+  o.observe(c);
+})();
 
 /* ==========================================================
    DEKO-PLANER
@@ -1338,117 +1485,140 @@ const THEMES = {
 };
 const state = { theme:"Bordeaux & Gold", occasion:"Hochzeit", guests:250, els:new Set(["arch","table","candles","lights"]) };
 const ELNAMES = {arch:"Blumenbogen",table:"Brautpaar-Tisch",candles:"Kerzen",lights:"Lichterketten",stands:"Blumenständer",love:"LOVE-Schriftzug",doves:"Hochzeitstauben"};
-
-// Blumen & Lampen generieren
 (function(){
   const NS = "http://www.w3.org/2000/svg";
   const add = (g, n, fn) => { for (let i=0;i<n;i++){ const c = document.createElementNS(NS,"circle"); fn(c,i); c.classList.add("flower"); c.dataset.i = i; g.appendChild(c); } };
-  const af = $("#sceneSvg .arch-flowers");
-  add(af, 46, (c,i)=>{ const a = Math.PI - (i/45)*Math.PI*1.0; let x,y;
+  add($("#sceneSvg .arch-flowers"), 46, (c,i)=>{ let x,y;
     if (i < 8){ x = 190 + (Math.random()*10-5); y = 330 - i*20; } else if (i > 37){ x = 410 + (Math.random()*10-5); y = 330 - (45-i)*20; }
-    else { const k = (i-8)/29; const an = Math.PI - k*Math.PI; x = 300 + Math.cos(an)*110; y = 175 - Math.sin(an)*110; }
+    else { const k = (i-8)/29, an = Math.PI - k*Math.PI; x = 300 + Math.cos(an)*110; y = 175 - Math.sin(an)*110; }
     c.setAttribute("cx", x + (Math.random()*8-4)); c.setAttribute("cy", y + (Math.random()*8-4)); c.setAttribute("r", 6 + Math.random()*4); });
-  $$("#sceneSvg .stand-flowers").forEach(g=> add(g, 12, (c,i)=>{ const a = i/12*Math.PI*2; c.setAttribute("cx", Math.cos(a)*16 + (Math.random()*6-3)); c.setAttribute("cy", 246 + Math.sin(a)*10 - 6 + (Math.random()*6-3)); c.setAttribute("r", 9 + Math.random()*4); }));
+  $$("#sceneSvg .stand-flowers").forEach(g=> add(g, 12, (c,i)=>{ const a = i/12*Math.PI*2; c.setAttribute("cx", Math.cos(a)*16 + (Math.random()*6-3)); c.setAttribute("cy", 240 + Math.sin(a)*10 + (Math.random()*6-3)); c.setAttribute("r", 8 + Math.random()*4); }));
   add($("#sceneSvg .table-flowers"), 14, (c,i)=>{ c.setAttribute("cx", 245 + i*8.5 + (Math.random()*4-2)); c.setAttribute("cy", 344 - Math.sin(i/13*Math.PI)*14 + (Math.random()*4-2)); c.setAttribute("r", 7 + Math.random()*4); });
   const bulbs = $("#sceneSvg .bulbs");
-  for (let i=0;i<24;i++){ const x = i*26 + 6; const ph = (x % 150)/150; const y = 40 + Math.sin(ph*Math.PI)*40 * (Math.floor(x/150)%2===0 ? 1 : 1);
+  for (let i=0;i<24;i++){ const x = i*26 + 6, y = 40 + Math.sin(((x % 150)/150)*Math.PI)*40;
     const g = document.createElementNS(NS,"circle"); g.setAttribute("cx",x); g.setAttribute("cy",y+3); g.setAttribute("r",14); g.setAttribute("fill","url(#glow)"); g.setAttribute("opacity",".7"); bulbs.appendChild(g);
     const b = document.createElementNS(NS,"circle"); b.setAttribute("cx",x); b.setAttribute("cy",y+3); b.setAttribute("r",3); b.setAttribute("fill","#ffe7a8"); bulbs.appendChild(b); }
 })();
-
 const themeChips = $("#themeChips");
-Object.entries(THEMES).forEach(([name,th],i)=>{
-  const b = document.createElement("button"); b.className = "chip" + (i===0?" on":""); b.dataset.v = name;
-  b.innerHTML = `<span class="swatch"><i style="background:${th.main}"></i><i style="background:${th.accent}"></i><i style="background:${th.cloth}"></i></span>${name}`;
-  themeChips.appendChild(b);
-});
-function single(container, key){
-  container.addEventListener("click", e=>{ const c = e.target.closest(".chip"); if(!c) return;
-    $$("#"+container.id+" .chip").forEach(x=>x.classList.remove("on")); c.classList.add("on"); state[key] = c.dataset.v; render(); });
-}
+Object.entries(THEMES).forEach(([name,th],i)=>{ const b = document.createElement("button"); b.className = "chip" + (i===0?" on":""); b.dataset.v = name;
+  b.innerHTML = `<span class="swatch"><i style="background:${th.main}"></i><i style="background:${th.accent}"></i><i style="background:${th.cloth}"></i></span>${name}`; themeChips.appendChild(b); });
+function single(container, key){ container.addEventListener("click", e=>{ const c = e.target.closest(".chip"); if(!c) return;
+  container.querySelectorAll(".chip").forEach(x=>x.classList.remove("on")); c.classList.add("on"); state[key] = c.dataset.v; render(); }); }
 single(themeChips, "theme"); single($("#occasionChips"), "occasion");
 $("#elChips").addEventListener("click", e=>{ const c = e.target.closest(".chip"); if(!c) return;
-  c.classList.toggle("on"); const el = c.dataset.el; state.els.has(el) ? state.els.delete(el) : state.els.add(el); render();
-  if (el==="doves" && state.els.has("doves")){ const r = $("#stage").getBoundingClientRect(); for(let i=0;i<3;i++) setTimeout(()=>releaseDove(r.left + r.width*(.3+Math.random()*.4), r.top + r.height*.6), i*180); } });
-const gs = $("#guests");
-gs.addEventListener("input", ()=>{ state.guests = +gs.value; render(); });
-
+  c.classList.toggle("on"); const k = c.dataset.el; state.els.has(k) ? state.els.delete(k) : state.els.add(k); render();
+  if (k==="doves" && state.els.has("doves")){ const r = $("#stage").getBoundingClientRect(); for(let i=0;i<3;i++) setTimeout(()=>releaseDove(r.left + r.width*(.3+Math.random()*.4), r.top + r.height*.6), i*180); } });
+const gs = $("#guests"); gs.addEventListener("input", ()=>{ state.guests = +gs.value; render(); });
 function render(){
   const th = THEMES[state.theme], svg = $("#sceneSvg");
   $("#stage").style.setProperty("--c-bg", th.bg);
-  svg.querySelector(".c-wall").setAttribute("fill", th.wall);
-  svg.querySelector(".c-floor").setAttribute("fill", th.floor);
+  svg.querySelector(".c-wall").setAttribute("fill", th.wall); svg.querySelector(".c-floor").setAttribute("fill", th.floor);
   svg.querySelectorAll(".c-main-fill").forEach(e=>e.setAttribute("fill", th.main));
   svg.querySelectorAll(".c-accent-fill").forEach(e=>e.setAttribute("fill", th.accent));
   svg.querySelectorAll(".c-accent-stroke").forEach(e=>e.setAttribute("stroke", th.accent));
-  svg.querySelector(".c-cloth").setAttribute("fill", th.cloth);
-  svg.querySelector(".c-cloth2").setAttribute("fill", th.cloth2);
-  svg.querySelectorAll(".flower").forEach(c=> c.setAttribute("fill", th.flowers[(+c.dataset.i*7 + c.cx.baseVal.value|0) % th.flowers.length]));
+  svg.querySelector(".c-cloth").setAttribute("fill", th.cloth); svg.querySelector(".c-cloth2").setAttribute("fill", th.cloth2);
+  svg.querySelectorAll(".flower").forEach(c=> c.setAttribute("fill", th.flowers[(+c.dataset.i*7 + (c.cx.baseVal.value|0)) % th.flowers.length]));
   Object.keys(ELNAMES).forEach(k=> $("#el-"+k).classList.toggle("hidden-el", !state.els.has(k)));
   $("#stageBadge").textContent = `${state.occasion} · ${state.theme}`;
-  gs.style.setProperty("--p", ((state.guests-20)/(980)*100) + "%");
-  $("#guestVal").textContent = state.guests;
-  $("#tableVal").textContent = `≈ ${Math.ceil(state.guests/10)} Tische à 10 Pers.`;
+  gs.style.setProperty("--p", ((state.guests-20)/980*100) + "%");
+  $("#guestVal").textContent = state.guests; $("#tableVal").textContent = `≈ ${Math.ceil(state.guests/10)} Tische à 10 Pers.`;
   const els = [...state.els].map(k=>ELNAMES[k]);
   $("#summary").innerHTML = `<b>Ihre Auswahl:</b> ${state.occasion} für ca. ${state.guests} Gäste in <b>${state.theme}</b>${els.length ? " – mit " + els.join(", ") : ""}.`;
 }
 render();
 
-$("#takeConfig").onclick = () => {
-  $("#f-occ").value = state.occasion;
-  $("#f-guests").value = state.guests;
-  const map = {arch:"Blumenbogen", candles:"Lichter & Kerzen", lights:"Lichter & Kerzen", doves:"Hochzeitstauben"};
-  $$("#f-services input").forEach(i=>{ i.checked = false; });
-  const want = new Set([state.occasion==="Standesamt" ? "Standesamt-Deko" : state.occasion==="Heiratsantrag" ? "Antrags-Deko" : "Dekoration"]);
-  state.els.forEach(k=>{ if (map[k]) want.add(map[k]); });
-  $$("#f-services input").forEach(i=>{ if (want.has(i.value)) i.checked = true; });
-  const els = [...state.els].map(k=>ELNAMES[k]).join(", ");
-  $("#f-msg").value = `Farbwelt: ${state.theme}\nElemente: ${els || "–"}\n\n`;
-  $("#kontakt").scrollIntoView({behavior:"smooth"});
-  setTimeout(()=>{ $("#f-name").focus({preventScroll:true}); }, 900);
-  toast("Ihre Auswahl wurde in die Anfrage übernommen ✓");
-};
-
-/* ==========================================================
-   VORHER / NACHHER
-   ========================================================== */
-(function(){
-  const c = $("#compare"); let drag = false;
-  const set = x => { const r = c.getBoundingClientRect(); c.style.setProperty("--x", clamp((x - r.left)/r.width*100, 0, 100) + "%"); };
-  c.addEventListener("pointerdown", e=>{ drag = true; c.setPointerCapture(e.pointerId); set(e.clientX); });
-  c.addEventListener("pointermove", e=>{ if (drag) set(e.clientX); });
-  c.addEventListener("pointerup", ()=> drag = false);
-  // kleiner Hinweis-Schwenk beim ersten Sichtbarwerden
-  const o = new IntersectionObserver(es=>{ if (es[0].isIntersecting){ o.disconnect(); let st = performance.now();
-    (function a(now){ const k = (now-st)/1600; if (k>1 || drag) return; c.style.setProperty("--x", (50 + Math.sin(k*Math.PI*2)*22) + "%"); requestAnimationFrame(a); })(st); } }, {threshold:.6});
-  o.observe(c);
-})();
-
 /* Ablauf-Linie */
 new IntersectionObserver((es,o)=>{ if (es[0].isIntersecting){ $("#steps .rail i").style.width = "100%"; o.disconnect(); } }, {threshold:.4}).observe($("#steps"));
 
 /* ==========================================================
-   GALERIE + LIGHTBOX
+   GALERIE – 3D-Karussell (ziehen, wischen, Pfeile, Autoplay)
    ========================================================== */
 const GAL = Array.from({length:10}, (_,i)=> CONFIG.img + `gallery/IMG-20260817-WA000${i}.jpg`)
-  .concat([CONFIG.img+"tauben-1.jpeg", CONFIG.img+"WhatsApp%20Image%202026-05-15%20at%2023.49.57.jpeg"]);
-const gal = $("#gallery");
-GAL.forEach((src,i)=>{
-  const d = document.createElement("div"); d.className = "g-item reveal"; d.style.transitionDelay = (i%4)*.08 + "s";
-  d.innerHTML = `<img src="${src}" alt="Jokis Deko – Galerie ${i+1}" loading="lazy">`;
-  d.querySelector("img").onerror = () => d.remove();
-  d.onclick = () => openLb(i);
-  gal.appendChild(d); io.observe(d);
-});
-let lbI = 0;
-const lb = $("#lightbox"), lbImg = $("#lbImg");
-function openLb(i){ lbI = (i + GAL.length) % GAL.length; lbImg.src = GAL[lbI]; $("#lbCount").textContent = `${lbI+1} / ${GAL.length}`; lb.classList.add("open"); }
+  .concat([CONFIG.img+"tauben-1.jpeg", CONFIG.img+"WhatsApp%20Image%202026-05-15%20at%2023.35.19.jpeg", CONFIG.img+"WhatsApp%20Image%202026-05-15%20at%2023.49.57.jpeg"]);
+(function(){
+  const cf = $("#cf"), thumbs = $("#cfThumbs"), N = GAL.length; let cur = 0, dragX = null, dx = 0, timer = null, barSt = 0;
+  const items = GAL.map((src,i)=>{
+    const d = document.createElement("div"); d.className = "cf-item";
+    d.innerHTML = `<img src="${src}" alt="Jokis Deko – Foto ${i+1}" loading="lazy" draggable="false"><button class="zoom" aria-label="Vergrößern">⤢</button>`;
+    d.querySelector("img").onerror = function(){ this.remove(); d.insertAdjacentHTML("afterbegin", `<div class="ph">Foto ${i+1}</div>`); };
+    d.addEventListener("click", ()=>{ if (Math.abs(dx) > 6) return; i === cur ? openLb(i) : go(i); });
+    cf.appendChild(d);
+    const t = document.createElement("button"); t.className = "cf-thumb"; t.innerHTML = `<img src="${src}" alt="" loading="lazy" onerror="this.remove()">`; t.onclick = () => go(i); thumbs.appendChild(t);
+    return d;
+  });
+  function layout(extra=0){
+    const w = items[0].offsetWidth || 500;
+    items.forEach((d,i)=>{
+      let off = i - cur; if (off > N/2) off -= N; if (off < -N/2) off += N;
+      const o = off + extra, a = Math.abs(o);
+      d.style.transform = `translate(-50%,-50%) translateX(${o*w*.62}px) translateZ(${-a*170}px) rotateY(${clamp(-o*32,-60,60)}deg)`;
+      d.style.opacity = a > 3.2 ? 0 : 1; d.style.zIndex = 100 - Math.round(a*10);
+      d.classList.toggle("active", off === 0); d.style.pointerEvents = a > 3 ? "none" : "auto";
+    });
+    $$(".cf-thumb").forEach((t,i)=>t.classList.toggle("on", i===cur));
+    $("#cfCount").innerHTML = `<b>${String(cur+1).padStart(2,"0")}</b> / ${String(N).padStart(2,"0")}`;
+  }
+  function go(i){ cur = (i + N) % N; layout(); restart(); }
+  window.cfGo = go;
+  $("#cfPrev").onclick = () => go(cur-1); $("#cfNext").onclick = () => go(cur+1);
+  cf.addEventListener("keydown", e=>{ if (e.key==="ArrowLeft") go(cur-1); if (e.key==="ArrowRight") go(cur+1); });
+  cf.addEventListener("pointerdown", e=>{ dragX = e.clientX; dx = 0; cf.classList.add("drag"); stop(); });
+  addEventListener("pointermove", e=>{ if (dragX === null) return; dx = e.clientX - dragX; layout(dx/((items[0].offsetWidth||500)*.62)); });
+  addEventListener("pointerup", ()=>{ if (dragX === null) return; cf.classList.remove("drag"); const steps = Math.round(-dx/((items[0].offsetWidth||500)*.62)); dragX = null; go(cur + steps); setTimeout(()=>dx=0, 50); });
+  cf.addEventListener("mouseenter", stop); cf.addEventListener("mouseleave", restart);
+  function stop(){ clearInterval(timer); timer = null; $("#cfBar").style.width = "0"; }
+  function restart(){ stop(); if (reduceMotion) return; barSt = performance.now(); timer = setInterval(()=>{ const k = (performance.now()-barSt)/4500; $("#cfBar").style.width = Math.min(100,k*100)+"%"; if (k>=1){ cur = (cur+1)%N; layout(); barSt = performance.now(); } }, 50); }
+  addEventListener("resize", ()=>layout());
+  layout(); restart();
+})();
+let lbI = 0; const lb = $("#lightbox"), lbImg = $("#lbImg");
+function openLb(i){ lbI = (i + GAL.length) % GAL.length; lbImg.src = GAL[lbI]; lb.classList.add("open"); }
 $("#lbClose").onclick = () => lb.classList.remove("open");
 $("#lbPrev").onclick = e => { e.stopPropagation(); openLb(lbI-1); };
 $("#lbNext").onclick = e => { e.stopPropagation(); openLb(lbI+1); };
 lb.onclick = e => { if (e.target === lb) lb.classList.remove("open"); };
-addEventListener("keydown", e=>{ if (!lb.classList.contains("open")) return;
-  if (e.key==="Escape") lb.classList.remove("open"); if (e.key==="ArrowLeft") openLb(lbI-1); if (e.key==="ArrowRight") openLb(lbI+1); });
+addEventListener("keydown", e=>{ if (!lb.classList.contains("open")) return; if (e.key==="Escape") lb.classList.remove("open"); if (e.key==="ArrowLeft") openLb(lbI-1); if (e.key==="ArrowRight") openLb(lbI+1); });
+
+/* ==========================================================
+   TEAM – illustrierte Avatare
+   ========================================================== */
+function avatar(o){
+  const hairBack = o.style === "long" ? `<path d="M34,52 C32,22 88,22 86,52 L92,104 C78,110 42,110 28,104Z" fill="${o.hair}"/>` : "";
+  const hairTop = {
+    short:`<path d="M38,52 C35,28 52,22 63,24 C78,25 88,36 82,54 C79,44 71,39 61,41 C51,41 43,45 38,52Z" fill="${o.hair}"/>`,
+    fade:`<path d="M39,50 C38,30 50,26 61,26 C74,26 84,34 81,50 C78,42 70,38 60,38 C50,38 42,42 39,50Z" fill="${o.hair}"/><path d="M39,50 L39,58 M81,50 L81,58" stroke="${o.hair}" stroke-width="3" opacity=".5"/>`,
+    long:`<path d="M38,56 C36,30 52,24 62,26 C76,27 86,38 82,58 C78,44 68,36 58,40 C48,44 42,50 38,56Z" fill="${o.hair}"/>`,
+    bun:`<circle cx="60" cy="22" r="11" fill="${o.hair}"/><path d="M38,54 C36,30 52,26 62,28 C76,28 86,38 82,54 C76,42 66,38 56,40 C48,42 42,48 38,54Z" fill="${o.hair}"/>`
+  }[o.style];
+  const beard = o.beard ? `<path d="M40,58 C41,80 52,84 60,84 C68,84 79,80 80,58 C76,70 70,73 60,73 C50,73 44,70 40,58Z" fill="${o.hair}" opacity=".92"/>` : "";
+  return `<svg viewBox="0 0 120 120" aria-hidden="true">
+    <rect width="120" height="120" fill="${o.bg}"/>
+    <circle cx="96" cy="22" r="26" fill="#fff" opacity=".07"/>
+    ${hairBack}
+    <path d="M14,124 C18,94 38,86 60,86 C82,86 102,94 106,124Z" fill="${o.shirt}"/>
+    <path d="M50,86 L60,100 L70,86" fill="${o.collar}"/>
+    <rect x="52" y="70" width="16" height="20" rx="7" fill="${o.skinS}"/>
+    <ellipse cx="60" cy="55" rx="21" ry="24" fill="${o.skin}"/>
+    <ellipse cx="38.5" cy="57" rx="3.5" ry="5" fill="${o.skinS}"/><ellipse cx="81.5" cy="57" rx="3.5" ry="5" fill="${o.skinS}"/>
+    ${hairTop}${beard}
+    <path d="M49,49 q4,-2.5 8,0 M63,49 q4,-2.5 8,0" stroke="${o.hair}" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <circle cx="53" cy="55" r="2.1" fill="#2a2521"/><circle cx="67" cy="55" r="2.1" fill="#2a2521"/>
+    <path d="M54,${o.beard?66:65} Q60,${o.beard?70:70} 66,${o.beard?66:65}" stroke="${o.beard?'#f3e6e8':'#a8475c'}" stroke-width="2" fill="none" stroke-linecap="round"/>
+    ${o.earring ? `<circle cx="38" cy="64" r="2" fill="#dcc286"/><circle cx="82" cy="64" r="2" fill="#dcc286"/>` : ""}
+  </svg>`;
+}
+const TEAM = [
+  {name:"Joki", role:"Gründer", text:"Plant jede Hochzeit persönlich und kümmert sich um die Hochzeitstauben.", fact:"„Der Moment, wenn die Tauben fliegen, wird nie langweilig.“",
+   av:{bg:"#6e2a3a", skin:"#c99a7a", skinS:"#b5876a", hair:"#1e1410", style:"short", beard:true, shirt:"#1e1b1a", collar:"#f8f3ea"}},
+  {name:"Rania", role:"Deko-Design", text:"Entwirft Farbkonzepte, Blumenbögen und Brautpaar-Tische.", fact:"„Gold geht immer. Aber in der richtigen Menge.“",
+   av:{bg:"#c7a65d", skin:"#d8ab8a", skinS:"#c29475", hair:"#2a1a14", style:"long", shirt:"#3f1620", collar:"#dcc286", earring:true}},
+  {name:"Baran", role:"Aufbau & Logistik", text:"Sorgt dafür, dass alles pünktlich und perfekt steht – egal wie groß der Saal ist.", fact:"„600 Stühle in zwei Stunden? Machbar.“",
+   av:{bg:"#3f1620", skin:"#c08f6e", skinS:"#a97c5d", hair:"#140d0a", style:"fade", shirt:"#c7a65d", collar:"#1e1b1a"}},
+  {name:"Dilan", role:"Licht & Details", text:"Bringt mit Kerzen, Lichterketten und kleinen Details die richtige Stimmung.", fact:"„Gutes Licht macht aus jedem Saal einen Ballsaal.“",
+   av:{bg:"#a8475c", skin:"#e0b495", skinS:"#c99c7e", hair:"#3a2418", style:"bun", shirt:"#f8f3ea", collar:"#c7a65d", earring:true}}
+];
+$("#teamGrid").innerHTML = TEAM.map((m,i)=>`<div class="member reveal ${i?"d"+i:""}"><div class="ph">${avatar(m.av)}</div><h3>${m.name}</h3><div class="role">${m.role}</div><p>${m.text}</p><div class="fact">${m.fact}</div></div>`).join("");
+$$("#teamGrid .reveal").forEach(el=>io.observe(el));
 
 /* FAQ */
 $$(".qa button").forEach(b=> b.onclick = () => {
@@ -1458,56 +1628,155 @@ $$(".qa button").forEach(b=> b.onclick = () => {
 });
 
 /* ==========================================================
-   KONTAKT – E-Mail mit Betreff & vorbereitetem Text
+   KONTAKT – zwei Varianten, E-Mail mit Betreff & Text
    ========================================================== */
-function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove("show"), 3200); }
-
-$("#f-date").min = new Date().toISOString().slice(0,10);
-$("#f-date").addEventListener("change", ()=>{
-  const v = $("#f-date").value; if (!v) return $("#countdown").textContent = "";
-  const days = Math.ceil((new Date(v) - new Date().setHours(0,0,0,0)) / 864e5);
-  $("#countdown").textContent = days > 0 ? `✦ Noch ${days} Tage bis zu Ihrem großen Tag` : "";
-});
+let mode = "offen";
+function setMode(m){
+  mode = m;
+  $$(".mode").forEach(b=>b.classList.toggle("on", b.dataset.mode === m));
+  $("#grid-offen").hidden = m !== "offen"; $("#grid-klar").hidden = m !== "klar";
+}
+$$(".mode").forEach(b=> b.onclick = () => setMode(b.dataset.mode));
+$("#k-date").min = new Date().toISOString().slice(0,10);
+$("#k-date").addEventListener("change", ()=>{ const v = $("#k-date").value; if (!v) return $("#countdown").textContent = "";
+  const days = Math.ceil((new Date(v) - new Date().setHours(0,0,0,0)) / 864e5); $("#countdown").textContent = days > 0 ? `✦ Noch ${days} Tage bis zu Ihrem großen Tag` : ""; });
 
 function buildMessage(){
-  const v = id => $(id).value.trim();
-  const fill = "[bitte ergänzen]";
-  const name = v("#f-name") || fill, occ = v("#f-occ");
-  const dateRaw = v("#f-date"), date = dateRaw ? new Date(dateRaw).toLocaleDateString("de-DE") : fill;
-  const services = $$("#f-services input:checked").map(i=>i.value).join(", ") || fill;
-  const subject = `Anfrage ${occ} – ${dateRaw ? date : "Datum offen"} – ${v("#f-name") || "Brautpaar"}`;
-  const body =
+  const v = id => $(id).value.trim(), fill = "[bitte ergänzen]";
+  if (mode === "offen"){
+    const name = v("#o-name"), occ = v("#o-occ"), when = $("input[name=when]:checked").value, how = $("input[name=how]:checked").value;
+    return { subject: `Beratungsanfrage – ${occ} – ${name || "Brautpaar"}`,
+      body:
+`Hallo liebes Jokis-Team,
+
+wir sind noch nicht ganz sicher, was wir genau möchten, und würden uns über eine unverbindliche Beratung freuen.
+
+Anlass: ${occ}
+Zeitraum: ${when}
+Bitte meldet euch ${how}${how==="per E-Mail" ? "." : ": " + fill}
+
+${v("#o-msg") || "Unsere Idee in ein paar Worten: " + fill}
+
+Viele Grüße
+${name || fill}` };
+  }
+  const name = v("#k-name"), occ = v("#k-occ"), dateRaw = v("#k-date"), date = dateRaw ? new Date(dateRaw).toLocaleDateString("de-DE") : fill;
+  const services = $$("#k-services input:checked").map(i=>i.value).join(", ") || fill;
+  return { subject: `Anfrage ${occ} – ${dateRaw ? date : "Datum offen"} – ${name || "Brautpaar"}`,
+    body:
 `Hallo liebes Jokis-Team,
 
 wir möchten gerne ein Angebot für unsere Dekoration anfragen.
 
 — Unsere Eckdaten —
-Name: ${name}
-Telefon: ${v("#f-phone") || fill}
 Anlass: ${occ}
 Datum: ${date}
-Location / Ort: ${v("#f-loc") || fill}
-Gäste (ca.): ${v("#f-guests") || fill}
+Location / Ort: ${v("#k-loc") || fill}
+Gäste (ca.): ${v("#k-guests") || fill}
 Gewünschte Leistungen: ${services}
 
 — Unsere Wünsche —
-${v("#f-msg") || "Farben, Stil, besondere Ideen: " + fill}
+${v("#k-msg") || "Farben, Stil, besondere Ideen: " + fill}
 
 Wir freuen uns auf eure Rückmeldung!
 
 Viele Grüße
-${v("#f-name") || fill}`;
-  return {subject, body};
+${name || fill}` };
 }
-function check(){ if (!$("#f-name").value.trim()){ $("#f-name").focus(); toast("Bitte geben Sie zuerst Ihren Namen ein."); return false; } return true; }
+function check(){ const f = mode === "offen" ? "#o-name" : "#k-name"; if (!$(f).value.trim()){ $(f).focus(); toast("Bitte geben Sie zuerst Ihren Namen ein."); return false; } return true; }
 $("#sendMail").onclick = () => { if (!check()) return; const {subject, body} = buildMessage();
-  location.href = `mailto:${CONFIG.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  toast("Ihr E-Mail-Programm öffnet sich …"); };
-$("#sendWa").onclick = () => { if (!check()) return; const {subject, body} = buildMessage();
-  window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(subject + "\n\n" + body)}`, "_blank"); };
+  location.href = `mailto:${CONFIG.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`; toast("Ihr E-Mail-Programm öffnet sich …"); };
+$("#sendWa").onclick = () => { if (!check()) return; const {subject, body} = buildMessage(); window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(subject + "\n\n" + body)}`, "_blank"); };
 $("#copyText").onclick = async () => { const {subject, body} = buildMessage();
-  try { await navigator.clipboard.writeText(`Betreff: ${subject}\n\n${body}`); toast(`Kopiert – einfach an ${CONFIG.email} senden.`); }
-  catch(e){ toast("Kopieren nicht möglich – bitte E-Mail-Button nutzen."); } };
+  try { await navigator.clipboard.writeText(`Betreff: ${subject}\n\n${body}`); toast(`Kopiert – einfach an ${CONFIG.email} senden.`); } catch(e){ toast("Kopieren nicht möglich – bitte E-Mail-Button nutzen."); } };
+
+// Deko-Planer → Anfrage
+$("#takeConfig").onclick = () => {
+  setMode("klar");
+  $("#k-occ").value = state.occasion; $("#k-guests").value = state.guests;
+  const map = {arch:"Blumenbogen", candles:"Lichter & Kerzen", lights:"Lichter & Kerzen", doves:"Hochzeitstauben"};
+  const want = new Set([state.occasion==="Standesamt" ? "Standesamt-Deko" : state.occasion==="Heiratsantrag" ? "Antrags-Deko" : "Dekoration"]);
+  state.els.forEach(k=>{ if (map[k]) want.add(map[k]); });
+  $$("#k-services input").forEach(i=> i.checked = want.has(i.value));
+  $("#k-msg").value = `Farbwelt: ${state.theme}\nElemente: ${[...state.els].map(k=>ELNAMES[k]).join(", ") || "–"}\n\n`;
+  $("#kontakt").scrollIntoView({behavior:"smooth"});
+  setTimeout(()=> $("#k-name").focus({preventScroll:true}), 900);
+  toast("Ihre Auswahl wurde in die Anfrage übernommen ✓");
+};
+
+/* ==========================================================
+   KI-CHAT
+   Mit CONFIG.chatEndpoint verbinden (n8n-Webhook / eigener Server mit ChatGPT).
+   Ohne Endpoint: Demo-Antworten (unten in LOCAL anpassbar).
+   ========================================================== */
+(function(){
+  const chat = $("#chat"), body = $("#chatBody"), quick = $("#chatQuick"), input = $("#chatInput"), teaser = $("#chatTeaser");
+  const sessionId = "jokis-" + Math.random().toString(36).slice(2,10);
+  const history = []; let greeted = false;
+  $("#chatFoot").textContent = CONFIG.chatEndpoint ? "KI-Assistent · Antworten können Fehler enthalten" : "Demo-Modus · vordefinierte Antworten";
+
+  const QUICK = ["Was kostet die Deko?", "Hochzeitstauben", "Ist mein Datum frei?", "Anfrage starten"];
+  const LOCAL = [
+    {k:/^(hallo|hi|hey|guten|salam|selam|merhaba|servus)/i, a:"Hallo! 👋 Schön, dass Sie da sind. Wie kann ich helfen?"},
+    {k:/anfrage starten|anfragen|angebot/i, a:"Sehr gerne! Unten auf der Seite können Sie mit wenigen Klicks anfragen – auch wenn noch nichts feststeht.", act:["Zur Anfrage","#kontakt"]},
+    {k:/preis|kost|teuer|budget|€|euro|günstig/i, a:"Dekoration gibt es ab 150 €, standesamtliche Deko ab 115 €. Der genaue Preis hängt von Gästezahl, Location und Ihren Wünschen ab – dafür erstellen wir ein individuelles Angebot.", act:["Angebot anfragen","#kontakt"]},
+    {k:/taube/i, a:"Unsere weißen Hochzeitstauben sind trainiert und finden aus bis zu 600 km sicher nach Hause. Ein echter Gänsehaut-Moment nach der Trauung! 🕊️"},
+    {k:/jesid|ezid|kurd|irak|arab|syr|kultur|henna|türk|liban|tradition/i, a:"Wir dekorieren Hochzeiten aller Kulturen – jesidisch, kurdisch, arabisch, deutsch oder gemischt. Ihre Traditionen setzen wir mit Liebe zum Detail um."},
+    {k:/termin|frei\b|datum|verfügbar|wann|zeitraum/i, a:"Ob Ihr Wunschtermin noch frei ist, prüft das Team persönlich. Schreiben Sie uns einfach Ihr Datum – wir melden uns so schnell wie möglich.", act:["Datum anfragen","#kontakt"]},
+    {k:/standesamt/i, a:"Für das Standesamt gibt es romantische Deko schon ab 115 € – mit Herzbögen, Lichtern und Deko für den Sektempfang."},
+    {k:/antrag|verlob/i, a:"Für Heiratsanträge gestalten wir romantische Settings mit Blumen, LOVE-Buchstaben und Lichtern – auf Wunsch als komplette Überraschung. 💍"},
+    {k:/wo |wo\?|^wo|ort|nrw|mönchengladbach|anfahrt|stadt|umgebung|kommt ihr/i, a:"Wir sitzen in Mönchengladbach und sind in der ganzen Umgebung unterwegs. Nennen Sie uns einfach Ihre Location."},
+    {k:/kontakt|telefon|anruf|nummer|mail|whatsapp|erreich/i, a:`Sie erreichen uns unter <a href="tel:+4921612708150">02161 2708150</a>, per E-Mail an <a href="mailto:${CONFIG.email}">${CONFIG.email}</a> oder per <a href="https://wa.me/${CONFIG.whatsapp}" target="_blank" rel="noopener">WhatsApp</a>.`},
+    {k:/planer|farbe|konfig|aussehen|stil|ideen|inspiration/i, a:"Probieren Sie unseren Deko-Planer: Farben wählen, Elemente an- und ausschalten – und die Auswahl direkt anfragen.", act:["Zum Deko-Planer","#konfigurator"]},
+    {k:/bild|foto|galerie|beispiel/i, a:"Schauen Sie gerne in unsere Galerie – dort finden Sie Einblicke in unsere letzten Dekorationen.", act:["Zur Galerie","#galerie"]},
+    {k:/danke|super|perfekt|toll|cool/i, a:"Sehr gerne! 😊 Wenn Sie möchten, können Sie direkt eine Anfrage starten.", act:["Anfrage starten","#kontakt"]}
+  ];
+
+  function add(html, who, isHTML){
+    const m = document.createElement("div"); m.className = "msg " + who;
+    if (isHTML) m.innerHTML = html; else m.textContent = html;
+    body.appendChild(m); body.scrollTop = body.scrollHeight; return m;
+  }
+  function typing(){ const t = document.createElement("div"); t.className = "msg bot typing"; t.innerHTML = "<i></i><i></i><i></i>"; body.appendChild(t); body.scrollTop = body.scrollHeight; return t; }
+  function renderQuick(){ quick.innerHTML = ""; QUICK.forEach(q=>{ const b = document.createElement("button"); b.type = "button"; b.textContent = q; b.onclick = () => send(q); quick.appendChild(b); }); }
+  function linkAct(m, act){ const a = document.createElement("a"); a.className = "act"; a.href = act[1]; a.textContent = act[0] + " →"; a.onclick = () => close(); m.appendChild(document.createElement("br")); m.appendChild(a); }
+
+  async function reply(text){
+    if (CONFIG.chatEndpoint){
+      const r = await fetch(CONFIG.chatEndpoint, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({sessionId, message:text, history, page:"jokis-deko"})});
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      const ct = r.headers.get("content-type") || "";
+      if (ct.includes("json")){ let j = await r.json(); if (Array.isArray(j)) j = j[0] || {}; return {text: j.reply || j.output || j.text || j.message || JSON.stringify(j)}; }
+      return {text: await r.text()};
+    }
+    await new Promise(r=>setTimeout(r, 600 + Math.random()*500));
+    const hit = LOCAL.find(x=>x.k.test(text));
+    return hit ? {html: hit.a, act: hit.act} : {html: "Gute Frage! Das beantwortet Ihnen das Team am besten persönlich – per Anfrage oder WhatsApp.", act:["Anfrage starten","#kontakt"]};
+  }
+  async function send(text){
+    text = text.trim(); if (!text) return;
+    add(text, "me"); history.push({role:"user", content:text}); input.value = "";
+    const t = typing();
+    try {
+      const r = await reply(text); t.remove();
+      const m = r.html ? add(r.html, "bot", true) : add(r.text, "bot");
+      if (r.act) linkAct(m, r.act);
+      history.push({role:"assistant", content: r.text || m.textContent});
+    } catch(e){ t.remove(); add(`Da ist gerade etwas schiefgelaufen. Schreiben Sie uns gerne direkt per <a href="https://wa.me/${CONFIG.whatsapp}" target="_blank" rel="noopener">WhatsApp</a>.`, "bot", true); }
+  }
+  function open(){
+    chat.classList.add("open"); teaser.classList.remove("show");
+    if (!greeted){ greeted = true; const t = typing(); setTimeout(()=>{ t.remove(); add("Hallo und willkommen bei Jokis Deko! 💐 Ich bin der digitale Assistent und beantworte Ihre Fragen zu Deko, Preisen, Tauben und Terminen.", "bot"); renderQuick(); }, 700); }
+    setTimeout(()=>input.focus(), 300);
+  }
+  function close(){ chat.classList.remove("open"); }
+  $("#chatLaunch").onclick = () => chat.classList.contains("open") ? close() : open();
+  $("#chatClose").onclick = close;
+  $("#openChatFromContact").onclick = open;
+  teaser.onclick = open;
+  $("#chatForm").onsubmit = e => { e.preventDefault(); send(input.value); };
+  addEventListener("scroll", function once(){ if (scrollY > innerHeight && !greeted){ setTimeout(()=>{ if (!greeted){ teaser.classList.add("show"); setTimeout(()=>teaser.classList.remove("show"), 9000); } }, 2500); removeEventListener("scroll", once); } }, {passive:true});
+})();
 </script>
 </body>
 </html>
